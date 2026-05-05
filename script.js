@@ -10,8 +10,10 @@ let currentX = 0, currentY = 0;
 let targetTiltX = 0, targetTiltY = 0;
 let tiltX = 0, tiltY = 0;
 
-// Settled state for when mouse leaves
-let isMouseOver = false;
+// Respect OS/browser reduced-motion preference (stays live if the user changes system settings)
+const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+let reducedMotion = motionQuery.matches;
+motionQuery.addEventListener('change', (e) => { reducedMotion = e.matches; });
 
 document.addEventListener('mousemove', (e) => {
     const nx = (e.clientX / window.innerWidth  - 0.5) * 2;  // -1 → 1
@@ -20,10 +22,11 @@ document.addEventListener('mousemove', (e) => {
     mouseX = nx;
     mouseY = ny;
 
-    // 3D tilt: subtle rotateX / rotateY — mirroring the Spline camera effect
-    targetTiltX = ny * -4.5;   // pitch:  top ↑ tilts back, bottom ↑ tilts forward
-    targetTiltY = nx *  6.5;   // yaw:    left → panel turns left, right → turns right
-    isMouseOver = true;
+    if (!reducedMotion) {
+        // 3D tilt: subtle rotateX / rotateY — mirroring the Spline camera effect
+        targetTiltX = ny * -4.5;   // pitch:  top ↑ tilts back, bottom ↑ tilts forward
+        targetTiltY = nx *  6.5;   // yaw:    left → panel turns left, right → turns right
+    }
 });
 
 document.addEventListener('mouseleave', () => {
@@ -31,7 +34,6 @@ document.addEventListener('mouseleave', () => {
     mouseY = 0;
     targetTiltX = 0;
     targetTiltY = 0;
-    isMouseOver = false;
 });
 
 function animate() {
@@ -40,12 +42,12 @@ function animate() {
     currentY += (mouseY - currentY) * 0.03;
     bgImage.style.transform = `translate(${-currentX * 30}px, ${-currentY * 22}px)`;
 
-    // --- 3D workspace tilt (slightly faster lerp for responsiveness) ---
-    tiltX += (targetTiltX - tiltX) * 0.055;
-    tiltY += (targetTiltY - tiltY) * 0.055;
-
-    // Combine a permanent tiny pitch with the mouse-driven tilt
-    vrWorkspace.style.transform = `rotateX(${1 + tiltX}deg) rotateY(${tiltY}deg)`;
+    // --- 3D workspace tilt: skip on reduced-motion or narrow screens (≤850px) ---
+    if (!reducedMotion && window.innerWidth > 850) {
+        tiltX += (targetTiltX - tiltX) * 0.055;
+        tiltY += (targetTiltY - tiltY) * 0.055;
+        vrWorkspace.style.transform = `rotateX(${1 + tiltX}deg) rotateY(${tiltY}deg)`;
+    }
 
     requestAnimationFrame(animate);
 }

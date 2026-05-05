@@ -607,11 +607,6 @@ body {
 }
 .footer-link:hover::after { width: 100%; }
 
-/* ===== TILT TRANSITION (for smooth 3D response) ===== */
-.vr-workspace.tilt-active {
-    transition: transform 0.06s linear;
-}
-
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1100px) {
     .notes-panel { display: none; }
