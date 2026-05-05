@@ -1,6 +1,4 @@
-// ===== 3D PARALLAX MOUSE TRACKING =====
-const scene = document.getElementById('scene');
-const perspectiveContainer = document.getElementById('perspectiveContainer');
+// ===== BACKGROUND-ONLY PARALLAX (panels stay static) =====
 const bgImage = document.getElementById('bgImage');
 
 let mouseX = 0, mouseY = 0;
@@ -11,22 +9,18 @@ document.addEventListener('mousemove', (e) => {
     mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
 });
 
-function animate3D() {
-    currentX += (mouseX - currentX) * 0.06;
-    currentY += (mouseY - currentY) * 0.06;
+function animateBackground() {
+    // Smooth interpolation
+    currentX += (mouseX - currentX) * 0.04;
+    currentY += (mouseY - currentY) * 0.04;
 
-    const rotateY = currentX * 4;
-    const rotateX = -currentY * 3;
-
-    perspectiveContainer.style.transform =
-        `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
-
+    // ONLY the background image moves — panels are static
     bgImage.style.transform =
-        `scale(1.08) translate(${-currentX * 15}px, ${-currentY * 10}px)`;
+        `translate(${-currentX * 30}px, ${-currentY * 20}px)`;
 
-    requestAnimationFrame(animate3D);
+    requestAnimationFrame(animateBackground);
 }
-animate3D();
+animateBackground();
 
 // ===== NAVIGATION =====
 const navItems = document.querySelectorAll('.nav-item');
