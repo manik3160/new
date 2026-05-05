@@ -1,4 +1,4 @@
-// ===== BACKGROUND-ONLY PARALLAX (panels stay static) =====
+// ===== BACKGROUND-ONLY PARALLAX (panels stay completely static) =====
 const bgImage = document.getElementById('bgImage');
 
 let mouseX = 0, mouseY = 0;
@@ -10,13 +10,13 @@ document.addEventListener('mousemove', (e) => {
 });
 
 function animateBackground() {
-    // Smooth interpolation
-    currentX += (mouseX - currentX) * 0.04;
-    currentY += (mouseY - currentY) * 0.04;
+    // Smooth interpolation — low factor = silky smooth
+    currentX += (mouseX - currentX) * 0.035;
+    currentY += (mouseY - currentY) * 0.035;
 
-    // ONLY the background image moves — panels are static
+    // ONLY the background image moves — panels stay perfectly static
     bgImage.style.transform =
-        `translate(${-currentX * 30}px, ${-currentY * 20}px)`;
+        `translate(${-currentX * 35}px, ${-currentY * 25}px)`;
 
     requestAnimationFrame(animateBackground);
 }
@@ -40,7 +40,7 @@ navItems.forEach(item => {
             section.classList.add('active');
             section.style.animation = 'none';
             section.offsetHeight; // trigger reflow
-            section.style.animation = 'fadeInSection 0.5s ease';
+            section.style.animation = 'fadeInSection 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
         }
 
         // Update notes panel based on section
@@ -101,16 +101,20 @@ function updateNotes(section) {
 
     heading.style.opacity = '0';
     textContainer.style.opacity = '0';
+    heading.style.transform = 'translateY(8px)';
+    textContainer.style.transform = 'translateY(8px)';
 
     setTimeout(() => {
         heading.textContent = data.title;
         textContainer.innerHTML = data.text.map(p => `<p>${p}</p>`).join('');
         heading.style.opacity = '1';
+        heading.style.transform = 'translateY(0)';
         textContainer.style.opacity = '1';
+        textContainer.style.transform = 'translateY(0)';
     }, 200);
 
-    heading.style.transition = 'opacity 0.2s ease';
-    textContainer.style.transition = 'opacity 0.2s ease';
+    heading.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    textContainer.style.transition = 'opacity 0.3s ease 0.05s, transform 0.3s ease 0.05s';
 }
 
 // ===== FLOATING PARTICLES =====
@@ -129,11 +133,11 @@ class Particle {
     reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = (Math.random() - 0.5) * 0.4;
-        this.speedY = (Math.random() - 0.5) * 0.3;
-        this.opacity = Math.random() * 0.4 + 0.1;
-        this.hue = Math.random() > 0.5 ? 255 : 180; // purple or cyan
+        this.size = Math.random() * 1.5 + 0.3;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.2;
+        this.opacity = Math.random() * 0.3 + 0.05;
+        this.hue = Math.random() > 0.5 ? 255 : 180;
     }
     update() {
         this.x += this.speedX;
@@ -152,7 +156,7 @@ class Particle {
     }
 }
 
-const particles = Array.from({ length: 60 }, () => new Particle());
+const particles = Array.from({ length: 40 }, () => new Particle());
 
 function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
