@@ -27,6 +27,8 @@ document.addEventListener('mousemove', (e) => {
 });
 
 document.addEventListener('mouseleave', () => {
+    mouseX = 0;
+    mouseY = 0;
     targetTiltX = 0;
     targetTiltY = 0;
     isMouseOver = false;
