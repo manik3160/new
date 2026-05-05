@@ -522,7 +522,7 @@ body {
     outline: none; resize: none;
 }
 .form-input:focus { border-color: rgba(108,92,231,0.38); }
-.form-input::placeholder { color: rgba(255,255,255,0.18); }
+.form-input::placeholder { color: rgba(255,255,255,0.7); }
 .submit-btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     padding: 8px 18px;
