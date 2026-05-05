@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manik — Full Stack Developer Portfolio</title>
+    <meta name="description" content="Full Stack Developer portfolio showcasing projects, skills, and experience in modern web development.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Fullscreen Background -->
+    <div class="bg-container">
+        <img src="assets/bg.png" alt="" class="bg-image" id="bgImage">
+        <div class="bg-overlay"></div>
+    </div>
+
+    <!-- Floating Particles -->
+    <canvas id="particles"></canvas>
+
+    <!-- Main 3D Scene -->
+    <div class="scene" id="scene">
+        <div class="perspective-container" id="perspectiveContainer">
+
+            <!-- Main Glass Panel -->
+            <div class="main-panel" id="mainPanel">
+
+                <!-- Left Sidebar -->
+                <aside class="sidebar" id="sidebar">
+                    <div class="profile-section">
+                        <div class="avatar-ring">
+                            <div class="avatar" id="avatar">
+                                <span class="avatar-text">M</span>
+                            </div>
+                            <div class="avatar-glow"></div>
+                        </div>
+                        <p class="profile-subtitle">Full Stack Developer Portfolio</p>
+                        <h1 class="profile-name">Manik Rajora</h1>
+                        <p class="profile-location">India</p>
+                        <button class="see-more-btn" id="seeMoreBtn">
+                            <span>See more</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <nav class="nav-menu" id="navMenu">
+                        <a href="#home" class="nav-item active" data-section="home">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                            <span>Home</span>
+                        </a>
+                        <a href="#projects" class="nav-item" data-section="projects">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                            <span>Projects</span>
+                        </a>
+                        <a href="#personal" class="nav-item" data-section="personal">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            <span>Personal</span>
+                        </a>
+                        <a href="#career" class="nav-item" data-section="career">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                            </svg>
+                            <span>Career</span>
+                        </a>
+                        <a href="#contact" class="nav-item" data-section="contact">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            <span>Contact</span>
+                        </a>
+                    </nav>
+                </aside>
+
+                <!-- Main Content Area -->
+                <main class="content-area" id="contentArea">
+
+                    <!-- Home Section -->
+                    <section class="section active" id="section-home">
+                        <div class="project-cards-grid">
+                            <!-- Card 1 - Featured -->
+                            <div class="project-card featured" data-tilt>
+                                <div class="card-badge purple">AI CODE REVIEWER</div>
+                                <h3 class="card-title">Build an <span class="highlight">AI-powered</span> code review tool</h3>
+                                <div class="card-image-container">
+                                    <img src="assets/project1.png" alt="AI Code Review Tool" class="card-image" loading="lazy">
+                                </div>
+                            </div>
+
+                            <!-- Card 2 -->
+                            <div class="project-card" data-tilt>
+                                <div class="card-badge blue">REAL-TIME APP</div>
+                                <h3 class="card-title">Real-time chat with <span class="highlight">live collaboration</span></h3>
+                                <div class="card-image-container">
+                                    <img src="assets/project2.png" alt="Real-time Chat App" class="card-image" loading="lazy">
+                                </div>
+                            </div>
+
+                            <!-- Card 3 -->
+                            <div class="project-card" data-tilt>
+                                <div class="card-badge purple">CRYPTO TRACKER</div>
+                                <h3 class="card-title">Track your <span class="highlight">crypto portfolio</span> in real-time</h3>
+                                <div class="card-image-container">
+                                    <img src="assets/project3.png" alt="Crypto Tracker Dashboard" class="card-image" loading="lazy">
+                                </div>
+                            </div>
+
+                            <!-- Card 4 -->
+                            <div class="project-card" data-tilt>
+                                <div class="card-badge blue">WEATHER APP</div>
+                                <h3 class="card-title">Beautiful <span class="highlight">weather forecasts</span> at a glance</h3>
+                                <div class="card-image-container">
+                                    <img src="assets/project4.png" alt="Weather App" class="card-image" loading="lazy">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Projects Section -->
+                    <section class="section" id="section-projects">
+                        <h2 class="section-title">My Projects</h2>
+                        <p class="section-hint">Click one of the images for more information</p>
+                        <div class="projects-detail-grid">
+                            <div class="project-detail-card" data-tilt>
+                                <img src="assets/project1.png" alt="AI Code Review Tool" class="detail-image" loading="lazy">
+                                <div class="detail-overlay">
+                                    <h3>CodePulse AI</h3>
+                                    <p>AI-powered code review and suggestion tool built with React, Node.js, and OpenAI API</p>
+                                    <div class="tech-tags">
+                                        <span>React</span><span>Node.js</span><span>OpenAI</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-detail-card" data-tilt>
+                                <img src="assets/project2.png" alt="Nexus Chat" class="detail-image" loading="lazy">
+                                <div class="detail-overlay">
+                                    <h3>Nexus Chat</h3>
+                                    <p>Real-time messaging platform with file sharing and team collaboration features</p>
+                                    <div class="tech-tags">
+                                        <span>React</span><span>Socket.io</span><span>MongoDB</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-detail-card" data-tilt>
+                                <img src="assets/project3.png" alt="Crypto Track" class="detail-image" loading="lazy">
+                                <div class="detail-overlay">
+                                    <h3>CryptoTrack</h3>
+                                    <p>Cryptocurrency portfolio tracker with real-time charts and alerts</p>
+                                    <div class="tech-tags">
+                                        <span>Next.js</span><span>D3.js</span><span>WebSocket</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-detail-card" data-tilt>
+                                <img src="assets/project4.png" alt="Weather App" class="detail-image" loading="lazy">
+                                <div class="detail-overlay">
+                                    <h3>SkyLens</h3>
+                                    <p>Beautiful weather forecast app with location-based search and 5-day forecasts</p>
+                                    <div class="tech-tags">
+                                        <span>React</span><span>OpenWeather API</span><span>CSS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-detail-card" data-tilt>
+                                <img src="assets/project1.png" alt="DevFlow" class="detail-image" loading="lazy">
+                                <div class="detail-overlay">
+                                    <h3>DevFlow</h3>
+                                    <p>CI/CD pipeline dashboard for monitoring builds, deployments and code quality</p>
+                                    <div class="tech-tags">
+                                        <span>Vue.js</span><span>Docker</span><span>GitHub API</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-detail-card" data-tilt>
+                                <img src="assets/project2.png" alt="TaskBoard" class="detail-image" loading="lazy">
+                                <div class="detail-overlay">
+                                    <h3>TaskBoard Pro</h3>
+                                    <p>Kanban-style project management tool with drag-and-drop and team assignments</p>
+                                    <div class="tech-tags">
+                                        <span>React</span><span>Firebase</span><span>DnD</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Personal Section -->
+                    <section class="section" id="section-personal">
+                        <h2 class="section-title">Personal Info</h2>
+                        <div class="personal-content">
+                            <div class="info-card" data-tilt>
+                                <div class="info-icon">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                </div>
+                                <h3>About Me</h3>
+                                <p>I'm a passionate full-stack developer with a love for creating beautiful, performant web experiences. I enjoy solving complex problems and turning ideas into reality through code.</p>
+                            </div>
+                            <div class="info-card" data-tilt>
+                                <div class="info-icon">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                    </svg>
+                                </div>
+                                <h3>Languages</h3>
+                                <p>Hindi (Native) · English (Fluent)</p>
+                            </div>
+                            <div class="info-card" data-tilt>
+                                <div class="info-icon">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                </div>
+                                <h3>Interests</h3>
+                                <p>Open Source · System Design · AI/ML · Competitive Programming · Gaming</p>
+                            </div>
+                            <div class="info-card skills-card" data-tilt>
+                                <div class="info-icon">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                                    </svg>
+                                </div>
+                                <h3>Tech Stack</h3>
+                                <div class="skills-grid">
+                                    <span class="skill-tag">JavaScript</span>
+                                    <span class="skill-tag">TypeScript</span>
+                                    <span class="skill-tag">Python</span>
+                                    <span class="skill-tag">React</span>
+                                    <span class="skill-tag">Next.js</span>
+                                    <span class="skill-tag">Node.js</span>
+                                    <span class="skill-tag">Django</span>
+                                    <span class="skill-tag">PostgreSQL</span>
+                                    <span class="skill-tag">Docker</span>
+                                    <span class="skill-tag">Git</span>
+                                    <span class="skill-tag">AWS</span>
+                                    <span class="skill-tag">MongoDB</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Career Section -->
+                    <section class="section" id="section-career">
+                        <h2 class="section-title">Career</h2>
+                        <div class="career-timeline">
+                            <div class="timeline-item" data-tilt>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <span class="timeline-date">2024 — Present</span>
+                                    <h3>Open Source Contributor</h3>
+                                    <p class="timeline-company">GreedyBear / IntelOwl</p>
+                                    <p>Contributing to security-focused open source projects. Implemented API enhancements, database optimizations, and architectural improvements.</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-tilt>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <span class="timeline-date">2023 — 2024</span>
+                                    <h3>Full Stack Developer</h3>
+                                    <p class="timeline-company">Freelance</p>
+                                    <p>Built production-grade web applications for clients using React, Node.js, and cloud services. Focused on performance and user experience.</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-tilt>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <span class="timeline-date">2022 — Present</span>
+                                    <h3>B.Tech Computer Science</h3>
+                                    <p class="timeline-company">IIIT Sonepat</p>
+                                    <p>Pursuing degree in Computer Science with focus on software engineering, data structures, and algorithms.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Contact Section -->
+                    <section class="section" id="section-contact">
+                        <h2 class="section-title">Get In Touch</h2>
+                        <div class="contact-content">
+                            <div class="contact-card" data-tilt>
+                                <div class="contact-icon">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                </div>
+                                <h3>Email</h3>
+                                <p>manik@example.com</p>
+                            </div>
+                            <div class="contact-card" data-tilt>
+                                <div class="contact-icon">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                                </div>
+                                <h3>LinkedIn</h3>
+                                <p>linkedin.com/in/manik</p>
+                            </div>
+                            <div class="contact-card" data-tilt>
+                                <div class="contact-icon">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                                </div>
+                                <h3>GitHub</h3>
+                                <p>github.com/manik</p>
+                            </div>
+                            <div class="contact-card" data-tilt>
+                                <div class="contact-icon">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                                </div>
+                                <h3>Phone</h3>
+                                <p>+91 XXXXX XXXXX</p>
+                            </div>
+                        </div>
+                        <div class="contact-form-wrapper">
+                            <form class="contact-form" id="contactForm">
+                                <div class="form-row">
+                                    <input type="text" placeholder="Your Name" class="form-input" id="formName" required>
+                                    <input type="email" placeholder="Your Email" class="form-input" id="formEmail" required>
+                                </div>
+                                <textarea placeholder="Your Message..." class="form-input form-textarea" id="formMessage" rows="4" required></textarea>
+                                <button type="submit" class="submit-btn" id="submitBtn">
+                                    <span>Send Message</span>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </section>
+
+                </main>
+
+                <!-- Right Notes Panel -->
+                <aside class="notes-panel" id="notesPanel">
+                    <div class="notes-header">
+                        <h2 class="notes-title">Notes</h2>
+                        <div class="notes-actions">
+                            <button class="notes-action-btn" id="copyNotesBtn" aria-label="Copy">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            </button>
+                            <button class="notes-action-btn" id="moreNotesBtn" aria-label="More options">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="notes-body">
+                        <span class="notes-label">Title</span>
+                        <h3 class="notes-heading">Welcome to my portfolio!</h3>
+                        <div class="notes-text">
+                            <p>Hello everyone, welcome to my portfolio website! This site offers a 3D-inspired experience built with pure HTML, CSS, and JavaScript.</p>
+                            <p>I know what you're thinking: "A portfolio website in 3D for a developer? Is that really necessary?" In short, the answer is no. But it is fun! And it's a great way to showcase my work.</p>
+                            <p>On this website, you'll find a collection of my projects, personal information and details about my education and career. I hope you enjoy seeing what I can do. So go take a look!</p>
+                        </div>
+                    </div>
+                </aside>
+
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer" id="footer">
+                <a href="https://linkedin.com" target="_blank" class="footer-link" id="footerLinkedIn">LinkedIn</a>
+                <a href="mailto:manik@example.com" class="footer-link" id="footerEmail">Email</a>
+                <a href="https://github.com" target="_blank" class="footer-link" id="footerGithub">Github</a>
+                <a href="tel:+91" class="footer-link" id="footerPhone">Phone</a>
+            </footer>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
