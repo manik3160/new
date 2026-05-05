@@ -504,7 +504,9 @@ body {
     font-size: 10.5px; font-weight: 600; color: #fff; margin-bottom: 2px;
 }
 .contact-card p {
-    font-size: 8.5px; color: rgba(255,255,255,0.32);
+    font-size: 10px;
+    line-height: 1.4;
+    color: rgba(255,255,255,0.78);
 }
 .contact-form-wrapper { }
 .contact-form {
