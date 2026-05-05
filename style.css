@@ -85,11 +85,11 @@ body {
 .glass-panel {
     background: linear-gradient(
         160deg,
-        rgba(24, 22, 46, 0.78) 0%,
-        rgba(14, 13, 30, 0.88) 100%
+        rgba(24, 22, 46, 0.86) 0%,
+        rgba(14, 13, 30, 0.93) 100%
     );
-    backdrop-filter: blur(44px) saturate(1.7) brightness(1.04);
-    -webkit-backdrop-filter: blur(44px) saturate(1.7) brightness(1.04);
+    backdrop-filter: blur(18px) saturate(1.7) brightness(1.04);
+    -webkit-backdrop-filter: blur(18px) saturate(1.7) brightness(1.04);
     border: 1px solid rgba(255,255,255,0.065);
     border-top: 1px solid rgba(255,255,255,0.14);
     border-radius: 18px;
