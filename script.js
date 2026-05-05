@@ -1,26 +1,57 @@
-// ===== BACKGROUND-ONLY PARALLAX (panels stay completely static) =====
-const bgImage = document.getElementById('bgImage');
+// ===== BACKGROUND PARALLAX + 3D WORKSPACE TILT =====
+const bgImage    = document.getElementById('bgImage');
+const vrWorkspace = document.getElementById('vrWorkspace');
 
+// Background parallax targets
 let mouseX = 0, mouseY = 0;
 let currentX = 0, currentY = 0;
 
+// 3D workspace tilt targets
+let targetTiltX = 0, targetTiltY = 0;
+let tiltX = 0, tiltY = 0;
+
+// Respect OS/browser reduced-motion preference (stays live if the user changes system settings)
+const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+let reducedMotion = motionQuery.matches;
+motionQuery.addEventListener('change', (e) => { reducedMotion = e.matches; });
+
 document.addEventListener('mousemove', (e) => {
-    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    const nx = (e.clientX / window.innerWidth  - 0.5) * 2;  // -1 → 1
+    const ny = (e.clientY / window.innerHeight - 0.5) * 2;  // -1 → 1
+
+    mouseX = nx;
+    mouseY = ny;
+
+    if (!reducedMotion) {
+        // 3D tilt: subtle rotateX / rotateY — mirroring the Spline camera effect
+        targetTiltX = ny * -4.5;   // pitch:  top ↑ tilts back, bottom ↑ tilts forward
+        targetTiltY = nx *  6.5;   // yaw:    left → panel turns left, right → turns right
+    }
 });
 
-function animateBackground() {
-    // Smooth interpolation — low factor = silky smooth
-    currentX += (mouseX - currentX) * 0.035;
-    currentY += (mouseY - currentY) * 0.035;
+document.addEventListener('mouseleave', () => {
+    mouseX = 0;
+    mouseY = 0;
+    targetTiltX = 0;
+    targetTiltY = 0;
+});
 
-    // ONLY the background image moves — panels stay perfectly static
-    bgImage.style.transform =
-        `translate(${-currentX * 35}px, ${-currentY * 25}px)`;
+function animate() {
+    // --- Background parallax (low lerp = silky smooth) ---
+    currentX += (mouseX - currentX) * 0.03;
+    currentY += (mouseY - currentY) * 0.03;
+    bgImage.style.transform = `translate(${-currentX * 30}px, ${-currentY * 22}px)`;
 
-    requestAnimationFrame(animateBackground);
+    // --- 3D workspace tilt: skip on reduced-motion or narrow screens (≤850px) ---
+    if (!reducedMotion && window.innerWidth > 850) {
+        tiltX += (targetTiltX - tiltX) * 0.055;
+        tiltY += (targetTiltY - tiltY) * 0.055;
+        vrWorkspace.style.transform = `rotateX(${1 + tiltX}deg) rotateY(${tiltY}deg)`;
+    }
+
+    requestAnimationFrame(animate);
 }
-animateBackground();
+animate();
 
 // ===== NAVIGATION =====
 const navItems = document.querySelectorAll('.nav-item');
@@ -39,11 +70,10 @@ navItems.forEach(item => {
         if (section) {
             section.classList.add('active');
             section.style.animation = 'none';
-            section.offsetHeight; // trigger reflow
-            section.style.animation = 'fadeInSection 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+            section.offsetHeight; // force reflow
+            section.style.animation = 'fadeInSection 0.45s cubic-bezier(0.16, 1, 0.3, 1)';
         }
 
-        // Update notes panel based on section
         updateNotes(target);
     });
 });
@@ -96,33 +126,33 @@ function updateNotes(section) {
     const data = notesData[section];
     if (!data) return;
 
-    const heading = document.querySelector('.notes-heading');
+    const heading       = document.querySelector('.notes-heading');
     const textContainer = document.querySelector('.notes-text');
 
-    heading.style.opacity = '0';
+    heading.style.opacity       = '0';
     textContainer.style.opacity = '0';
-    heading.style.transform = 'translateY(8px)';
-    textContainer.style.transform = 'translateY(8px)';
+    heading.style.transform       = 'translateY(10px)';
+    textContainer.style.transform = 'translateY(10px)';
+
+    heading.style.transition       = 'opacity 0.3s ease, transform 0.3s ease';
+    textContainer.style.transition = 'opacity 0.3s ease 0.06s, transform 0.3s ease 0.06s';
 
     setTimeout(() => {
-        heading.textContent = data.title;
+        heading.textContent    = data.title;
         textContainer.innerHTML = data.text.map(p => `<p>${p}</p>`).join('');
-        heading.style.opacity = '1';
-        heading.style.transform = 'translateY(0)';
+        heading.style.opacity       = '1';
+        heading.style.transform     = 'translateY(0)';
         textContainer.style.opacity = '1';
         textContainer.style.transform = 'translateY(0)';
-    }, 200);
-
-    heading.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-    textContainer.style.transition = 'opacity 0.3s ease 0.05s, transform 0.3s ease 0.05s';
+    }, 220);
 }
 
 // ===== FLOATING PARTICLES =====
 const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
+const ctx    = canvas.getContext('2d');
 
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
+    canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
 }
 resizeCanvas();
@@ -131,13 +161,13 @@ window.addEventListener('resize', resizeCanvas);
 class Particle {
     constructor() { this.reset(); }
     reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 1.5 + 0.3;
-        this.speedX = (Math.random() - 0.5) * 0.3;
-        this.speedY = (Math.random() - 0.5) * 0.2;
-        this.opacity = Math.random() * 0.3 + 0.05;
-        this.hue = Math.random() > 0.5 ? 255 : 180;
+        this.x       = Math.random() * canvas.width;
+        this.y       = Math.random() * canvas.height;
+        this.size    = Math.random() * 1.4 + 0.2;
+        this.speedX  = (Math.random() - 0.5) * 0.28;
+        this.speedY  = (Math.random() - 0.5) * 0.18;
+        this.opacity = Math.random() * 0.28 + 0.04;
+        this.hue     = Math.random() > 0.55 ? 'purple' : 'teal';
     }
     update() {
         this.x += this.speedX;
@@ -149,14 +179,14 @@ class Particle {
     draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.hue === 255
-            ? `rgba(162, 155, 254, ${this.opacity})`
-            : `rgba(0, 206, 201, ${this.opacity})`;
+        ctx.fillStyle = this.hue === 'purple'
+            ? `rgba(162,155,254,${this.opacity})`
+            : `rgba(0,210,204,${this.opacity})`;
         ctx.fill();
     }
 }
 
-const particles = Array.from({ length: 40 }, () => new Particle());
+const particles = Array.from({ length: 45 }, () => new Particle());
 
 function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -167,8 +197,7 @@ animateParticles();
 
 // ===== SEE MORE BUTTON =====
 document.getElementById('seeMoreBtn').addEventListener('click', () => {
-    const personalNav = document.querySelector('[data-section="personal"]');
-    personalNav.click();
+    document.querySelector('[data-section="personal"]').click();
 });
 
 // ===== CONTACT FORM =====
@@ -178,8 +207,8 @@ document.getElementById('contactForm').addEventListener('submit', (e) => {
     btn.innerHTML = '<span>Sent! ✓</span>';
     btn.style.background = 'linear-gradient(135deg, #00b894, #00cec9)';
     setTimeout(() => {
-        btn.innerHTML = '<span>Send Message</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+        btn.innerHTML = '<span>Send Message</span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
         btn.style.background = '';
         e.target.reset();
-    }, 2000);
+    }, 2200);
 });
