@@ -1,458 +1,534 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manik — Full Stack Developer Portfolio</title>
-    <meta name="description"
-        content="Full Stack Developer portfolio showcasing projects, skills, and experience in modern web development.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manik — Portfolio</title>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --sand:#f3ede0;
+  --ink:#1a1a1a;
+  --blue:#2563eb;
+  --amber:#f59e0b;
+  --red:#dc2626;
+  --green:#16a34a;
+  --shadow:3px 3px 0 #1a1a1a;
+  --shadow-sm:2px 2px 0 #1a1a1a;
+  --border:1.5px solid #1a1a1a;
+}
+body{font-family:'Space Grotesk',sans-serif;background:var(--sand);height:100vh;overflow:hidden;position:relative}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='300' height='300' filter='url(%23n)' opacity='0.055'/></svg>");pointer-events:none;z-index:9000}
+
+.nav{height:48px;background:var(--sand);border-bottom:var(--border);display:flex;align-items:center;padding:0 16px;gap:18px;position:relative;z-index:100;flex-shrink:0}
+.nav-logo{font-weight:800;font-size:16px;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px;white-space:nowrap;color:var(--ink)}
+.nav-links{display:flex;gap:2px;flex:1}
+.nb{font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;padding:5px 10px;border:none;border-radius:4px;background:none;font-family:'Space Grotesk',sans-serif;transition:background .12s}
+.nb:hover{background:rgba(37,99,235,.08)}
+.nb.on{font-weight:700;background:rgba(37,99,235,.1);color:var(--blue)}
+.nav-cta{background:var(--amber);border:1.5px solid var(--ink);border-radius:4px;padding:6px 14px;font-size:13px;font-weight:700;font-family:'Space Grotesk',sans-serif;cursor:pointer;box-shadow:var(--shadow-sm);color:var(--ink);text-decoration:none;white-space:nowrap;transition:transform .1s,box-shadow .1s}
+.nav-cta:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+
+.workspace{display:flex;height:calc(100vh - 48px);overflow:hidden}
+
+.sidebar{width:108px;border-right:var(--border);padding:10px 6px;display:flex;flex-direction:column;gap:3px;background:rgba(243,237,224,.55);flex-shrink:0;overflow-y:auto}
+.sb{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 4px;border-radius:6px;cursor:pointer;border:1.5px solid transparent;background:none;font-family:'Space Grotesk',sans-serif;transition:background .12s;width:100%}
+.sb:hover{background:rgba(37,99,235,.08)}
+.sb.on{background:rgba(37,99,235,.1);border-color:rgba(37,99,235,.25)}
+.sb-ic{width:42px;height:42px;border-radius:8px;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shadow-sm);flex-shrink:0}
+.sb-lbl{font-size:9.5px;font-weight:600;color:var(--ink);text-align:center;line-height:1.2;word-break:break-all}
+
+.ew{flex:1;padding:14px;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.win{flex:1;border:2px solid var(--ink);border-radius:8px;box-shadow:5px 5px 0 var(--ink);display:flex;flex-direction:column;overflow:hidden;background:#fff}
+.win-bar{background:#f9f7f2;border-bottom:1.5px solid var(--ink);padding:9px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.win-dots{display:flex;gap:6px}
+.wd{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--ink);cursor:pointer}
+.win-title{font-size:12px;font-weight:600;flex:1;text-align:center;color:#555;margin-right:50px}
+.toolbar{border-bottom:1px solid #e5e0d5;padding:5px 12px;display:flex;align-items:center;gap:5px;flex-shrink:0;background:#fff;flex-wrap:nowrap;overflow:hidden}
+.tb{width:24px;height:24px;border:1px solid #d4cfc7;border-radius:3px;background:#fff;cursor:pointer;font-size:11px;font-weight:700;color:#666;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;flex-shrink:0}
+.tb:hover{background:#f3ede0}
+.tbsep{width:1px;height:18px;background:#d4cfc7;flex-shrink:0}
+.tbsel{border:1px solid #d4cfc7;border-radius:3px;padding:2px 5px;font-size:10px;background:#fff;font-family:'Space Grotesk',sans-serif;height:24px;cursor:pointer}
+.tb-dl{margin-left:auto;background:var(--blue);color:#fff;border:1.5px solid var(--ink);border-radius:4px;padding:4px 11px;font-size:11px;font-weight:700;font-family:'Space Grotesk',sans-serif;cursor:pointer;box-shadow:2px 2px 0 var(--ink);text-decoration:none;white-space:nowrap;flex-shrink:0}
+
+.scr{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#d4cfc7 #f9f7f2}
+.pad{padding:26px 34px}
+
+.stitle{font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:5px;color:var(--ink)}
+.ssub{font-size:13px;color:#777;margin-bottom:20px}
+.card{border:2px solid var(--ink);border-radius:6px;padding:18px;background:#fff;box-shadow:var(--shadow);margin-bottom:14px}
+.btn-a{background:var(--amber);border:2px solid var(--ink);border-radius:5px;padding:9px 20px;font-size:13px;font-weight:700;font-family:'Space Grotesk',sans-serif;cursor:pointer;box-shadow:var(--shadow);color:var(--ink);text-decoration:none;display:inline-block;transition:transform .1s,box-shadow .1s}
+.btn-a:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn-w{background:#fff;border:2px solid var(--ink);border-radius:5px;padding:9px 20px;font-size:13px;font-weight:700;font-family:'Space Grotesk',sans-serif;cursor:pointer;box-shadow:var(--shadow);color:var(--ink);transition:transform .1s,box-shadow .1s}
+.btn-w:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.tag{font-size:11px;font-weight:600;padding:3px 8px;border:1.5px solid var(--blue);border-radius:4px;background:#dbeafe;color:#1d4ed8}
+.link-u{color:var(--ink);font-weight:600;border-bottom:1.5px solid var(--ink);text-decoration:none;font-size:13px;display:inline-flex;align-items:center;gap:4px}
+.link-u:hover{color:var(--blue);border-bottom-color:var(--blue)}
+
+.tabs-bar{display:flex;border-bottom:1.5px solid var(--ink)}
+.tab{padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;color:#888;background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-1.5px;font-family:'Space Grotesk',sans-serif;transition:color .12s}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--ink);border-bottom-color:var(--blue);background:rgba(37,99,235,.04)}
+.tab-pnl{border:1.5px solid var(--ink);border-top:none;border-radius:0 0 6px 6px;padding:18px 20px;background:#faf9f6}
+
+.stat{border:2px solid var(--ink);border-radius:6px;padding:9px 14px;background:#fff;box-shadow:var(--shadow-sm);text-align:center;min-width:80px}
+.stat-n{font-size:19px;font-weight:800;color:var(--blue)}
+.stat-l{font-size:10px;font-weight:600;color:#888;margin-top:1px}
+
+.badge{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--ink);border-radius:6px;padding:8px 12px;background:#fef3c7;box-shadow:var(--shadow-sm);font-size:12px;font-weight:700}
+
+.rpanel{width:152px;border-left:var(--border);padding:12px 7px;display:flex;flex-direction:column;gap:4px;background:rgba(243,237,224,.4);flex-shrink:0;overflow-y:auto}
+.rp{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 4px;border-radius:6px;cursor:pointer;border:1.5px solid transparent;text-decoration:none;transition:background .12s}
+.rp:hover{background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.15)}
+.rp-ic{width:44px;height:44px;border:2px solid var(--ink);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#fff;box-shadow:var(--shadow-sm)}
+.rp-lbl{font-size:10px;font-weight:600;color:var(--ink);text-align:center}
+.rp-div{height:1px;background:rgba(26,26,26,.14);margin:3px 0}
+</style>
 </head>
-
 <body>
-    <!-- Fullscreen Background -->
-    <div class="bg-container">
-        <img src="assets/bg.png" alt="" class="bg-image" id="bgImage">
-        <div class="bg-overlay"></div>
+<div id="root"></div>
+<script type="text/babel">
+const {useState} = React;
+
+const GITHUB = 'https://github.com/manik3160';
+const LINKEDIN = 'https://linkedin.com/in/manik';
+const LEETCODE = 'https://leetcode.com/manik';
+const EMAIL = 'maniksingh3606@gmail.com';
+
+const Icon = {
+  github: (s=20) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="#1a1a1a" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.97.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 2.9-.39c.98 0 1.97.13 2.9.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.24 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.26 5.69.41.36.78 1.06.78 2.13v3.16c0 .31.21.68.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
+    </svg>
+  ),
+  linkedin: (s=20) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <rect width="24" height="24" rx="3" fill="#0A66C2"/>
+      <path fill="#fff" d="M7.06 9.5h2.9V18h-2.9V9.5zM8.5 5.5a1.7 1.7 0 1 1 0 3.4 1.7 1.7 0 0 1 0-3.4zM11.6 9.5h2.78v1.16h.04c.39-.73 1.34-1.5 2.76-1.5 2.95 0 3.49 1.94 3.49 4.46V18h-2.9v-3.85c0-.92-.02-2.1-1.28-2.1-1.28 0-1.48 1-1.48 2.04V18h-2.9V9.5z"/>
+    </svg>
+  ),
+  leetcode: (s=20) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14.7 2.27a1.5 1.5 0 0 1 2.13 2.12l-3.3 3.3 3.05 3.07a1.5 1.5 0 0 1-2.13 2.12l-3.05-3.06-3.6 3.61a3.5 3.5 0 0 0 0 4.95l3.6 3.6a3.5 3.5 0 0 0 4.95 0l3.3-3.29a1.5 1.5 0 0 1 2.13 2.12l-3.3 3.3a6.5 6.5 0 0 1-9.19 0l-3.6-3.6a6.5 6.5 0 0 1 0-9.2l9.01-9.04z" fill="#FFA116"/>
+      <path d="M21.6 13.5h-9.85a1.5 1.5 0 0 1 0-3h9.85a1.5 1.5 0 0 1 0 3z" fill="#B3B3B3"/>
+      <path d="M11.4 18.92a3.5 3.5 0 0 1 0-4.95l1.07-1.07a1.5 1.5 0 0 1 2.13 2.13l-1.08 1.06a.5.5 0 0 0 0 .71l.01.01a1.5 1.5 0 0 1-2.13 2.11z" fill="#000"/>
+    </svg>
+  ),
+};
+
+const SECS = [
+  {id:'home',   file:'home.mdx',        bg:'#f59e0b', em:'🏠'},
+  {id:'about',  file:'about.mdx',       bg:'#2563eb', em:'👤'},
+  {id:'proj',   file:'projects/',       bg:'#7c3aed', em:'📁'},
+  {id:'skills', file:'skills.mdx',      bg:'#16a34a', em:'⚡'},
+  {id:'exp',    file:'experience.mdx',  bg:'#dc2626', em:'💼'},
+  {id:'contact',file:'contact.mdx',     bg:'#0891b2', em:'✉️'},
+];
+
+const PROJ = [
+  {id:'nd', name:'NeverDown', sub:'Autonomous Multi-Agent AI System', em:'🤖',
+   desc:'Five-agent LLM pipeline with secure Docker sandboxing. Dynamically localizes CI bugs and auto-generates verified code patches — no human in the loop.',
+   tags:['Python','LLM APIs','Docker','Multi-Agent','GitHub Actions'],
+   bg:'#dbeafe'},
+  {id:'xp', name:'X-Pand', sub:'Geospatial ML Prediction Platform', em:'🌍',
+   desc:'End-to-end ML pipeline for real-time geospatial predictions. Vectorized SHAP computations for low-latency explainable inference at scale.',
+   tags:['Python','FastAPI','React','Scikit-Learn','SHAP','Pandas','NumPy'],
+   bg:'#dcfce7'},
+  {id:'vc', name:'VibeCode Editor', sub:'AI-Assisted Browser IDE', em:'💻',
+   desc:'Browser-based full-stack IDE with local Ollama LLMs and isolated WebContainers. Real-time, context-aware AI code generation — runs entirely in the browser.',
+   tags:['Next.js 15','TypeScript','WebContainers','Ollama','xterm.js'],
+   bg:'#fef3c7'},
+];
+
+const SKILLS = [
+  {g:'Programming',  items:['Java','JavaScript','TypeScript','Python','SQL']},
+  {g:'Frontend',     items:['React','Next.js','HTML/CSS','Tailwind CSS','Responsive']},
+  {g:'Backend',      items:['Node.js','Express','FastAPI','Flask','Django','REST APIs']},
+  {g:'AI / ML',      items:['Scikit-learn','LLMs','Multi-Agent','SHAP','NLP','Pandas','NumPy']},
+  {g:'Databases',    items:['MongoDB','SQL','Prisma']},
+  {g:'DevOps',       items:['Git','Docker','CI/CD','GitHub Actions','WebContainers','Jupyter']},
+];
+
+function Nav({s, set}) {
+  const links = [{id:'about',l:'About'},{id:'proj',l:'Projects'},{id:'skills',l:'Skills'},{id:'exp',l:'Experience'},{id:'contact',l:'Contact'}];
+  return (
+    <nav className="nav">
+      <div className="nav-logo"><span style={{fontSize:20}}>🦔</span> Manik</div>
+      <div className="nav-links">
+        {links.map(({id,l}) => <button key={id} className={`nb${s===id?' on':''}`} onClick={()=>set(id)}>{l}</button>)}
+      </div>
+      <a href={`mailto:${EMAIL}`} className="nav-cta">Hire me →</a>
+    </nav>
+  );
+}
+
+function Sidebar({s, set}) {
+  return (
+    <aside className="sidebar">
+      {SECS.map(sec => (
+        <button key={sec.id} className={`sb${s===sec.id?' on':''}`} onClick={()=>set(sec.id)}>
+          <div className="sb-ic" style={{background:sec.bg}}>{sec.em}</div>
+          <span className="sb-lbl">{sec.file}</span>
+        </button>
+      ))}
+    </aside>
+  );
+}
+
+function WinBar({title}) {
+  return (
+    <div className="win-bar">
+      <div className="win-dots">
+        <div className="wd" style={{background:'#ff5f57'}} />
+        <div className="wd" style={{background:'#febc2e'}} />
+        <div className="wd" style={{background:'#28c840'}} />
+      </div>
+      <div className="win-title">📄 {title} ↓</div>
     </div>
+  );
+}
 
-    <!-- Floating Particles -->
-    <canvas id="particles"></canvas>
+function Toolbar() {
+  return (
+    <div className="toolbar">
+      <button className="tb">↩</button>
+      <button className="tb">↪</button>
+      <div className="tbsep"/>
+      <select className="tbsel"><option>Zoom</option><option>100%</option><option>75%</option></select>
+      <div className="tbsep"/>
+      <button className="tb" style={{fontWeight:800}}>B</button>
+      <button className="tb" style={{fontStyle:'italic'}}>I</button>
+      <button className="tb" style={{textDecoration:'underline'}}>U</button>
+      <div className="tbsep"/>
+      <select className="tbsel"><option>Font</option><option>Space Grotesk</option></select>
+      <button className="tb">≡</button>
+      <button className="tb">⋮</button>
+      <button className="tb">🔗</button>
+      <a href="#" title="CV coming soon" className="tb-dl">Download CV</a>
+    </div>
+  );
+}
 
-    <!-- Main 3D Scene -->
-    <div class="scene" id="scene">
-        <div class="perspective-container" id="perspectiveContainer">
-
-            <!-- VR Workspace -->
-            <div class="vr-workspace" id="vrWorkspace">
-
-                <!-- Left Sidebar -->
-                <aside class="glass-panel sidebar" id="sidebar">
-                    <div class="profile-section">
-                        <div class="avatar-ring">
-                            <div class="avatar" id="avatar">
-                                <span class="avatar-text">M</span>
-                            </div>
-                            <div class="avatar-glow"></div>
-                        </div>
-                        <p class="profile-subtitle">Full Stack Developer Portfolio</p>
-                        <h1 class="profile-name">Manik
-                        </h1>
-                        <p class="profile-location">India</p>
-                        <button class="see-more-btn" id="seeMoreBtn">
-                            <span>See more</span>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M5 12h14M12 5l7 7-7 7" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <nav class="nav-menu" id="navMenu">
-                        <a href="#home" class="nav-item active" data-section="home">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                                <polyline points="9 22 9 12 15 12 15 22" />
-                            </svg>
-                            <span>Home</span>
-                        </a>
-                        <a href="#projects" class="nav-item" data-section="projects">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path
-                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                            </svg>
-                            <span>Projects</span>
-                        </a>
-                        <a href="#personal" class="nav-item" data-section="personal">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                            </svg>
-                            <span>Personal</span>
-                        </a>
-                        <a href="#career" class="nav-item" data-section="career">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                            </svg>
-                            <span>Career</span>
-                        </a>
-                        <a href="#contact" class="nav-item" data-section="contact">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                <polyline points="22,6 12,13 2,6" />
-                            </svg>
-                            <span>Contact</span>
-                        </a>
-                    </nav>
-                </aside>
-
-                <!-- Main Content Area -->
-                <main class="glass-panel content-area" id="contentArea">
-
-                    <!-- Home Section -->
-                    <section class="section active" id="section-home">
-                        <div class="project-cards-grid">
-                            <!-- Card 1 - Featured -->
-                            <div class="project-card featured" data-tilt>
-                                <div class="card-badge purple">AI CODE REVIEWER</div>
-                                <h3 class="card-title">Build an <span class="highlight">AI-powered</span> code review
-                                    tool</h3>
-                                <div class="card-image-container">
-                                    <img src="assets/project1.png" alt="AI Code Review Tool" class="card-image"
-                                        loading="lazy">
-                                </div>
-                            </div>
-
-                            <!-- Card 2 -->
-                            <div class="project-card" data-tilt>
-                                <div class="card-badge blue">REAL-TIME APP</div>
-                                <h3 class="card-title">Real-time chat with <span class="highlight">live
-                                        collaboration</span></h3>
-                                <div class="card-image-container">
-                                    <img src="assets/project2.png" alt="Real-time Chat App" class="card-image"
-                                        loading="lazy">
-                                </div>
-                            </div>
-
-                            <!-- Card 3 -->
-                            <div class="project-card" data-tilt>
-                                <div class="card-badge purple">CRYPTO TRACKER</div>
-                                <h3 class="card-title">Track your <span class="highlight">crypto portfolio</span> in
-                                    real-time</h3>
-                                <div class="card-image-container">
-                                    <img src="assets/project3.png" alt="Crypto Tracker Dashboard" class="card-image"
-                                        loading="lazy">
-                                </div>
-                            </div>
-
-                            <!-- Card 4 -->
-                            <div class="project-card" data-tilt>
-                                <div class="card-badge blue">WEATHER APP</div>
-                                <h3 class="card-title">Beautiful <span class="highlight">weather forecasts</span> at a
-                                    glance</h3>
-                                <div class="card-image-container">
-                                    <img src="assets/project4.png" alt="Weather App" class="card-image" loading="lazy">
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Projects Section -->
-                    <section class="section" id="section-projects">
-                        <h2 class="section-title">My Projects</h2>
-                        <p class="section-hint">Click one of the images for more information</p>
-                        <div class="projects-detail-grid">
-                            <div class="project-detail-card" data-tilt>
-                                <img src="assets/project1.png" alt="AI Code Review Tool" class="detail-image"
-                                    loading="lazy">
-                                <div class="detail-overlay">
-                                    <h3>CodePulse AI</h3>
-                                    <p>AI-powered code review and suggestion tool built with React, Node.js, and OpenAI
-                                        API</p>
-                                    <div class="tech-tags">
-                                        <span>React</span><span>Node.js</span><span>OpenAI</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="project-detail-card" data-tilt>
-                                <img src="assets/project2.png" alt="Nexus Chat" class="detail-image" loading="lazy">
-                                <div class="detail-overlay">
-                                    <h3>Nexus Chat</h3>
-                                    <p>Real-time messaging platform with file sharing and team collaboration features
-                                    </p>
-                                    <div class="tech-tags">
-                                        <span>React</span><span>Socket.io</span><span>MongoDB</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="project-detail-card" data-tilt>
-                                <img src="assets/project3.png" alt="Crypto Track" class="detail-image" loading="lazy">
-                                <div class="detail-overlay">
-                                    <h3>CryptoTrack</h3>
-                                    <p>Cryptocurrency portfolio tracker with real-time charts and alerts</p>
-                                    <div class="tech-tags">
-                                        <span>Next.js</span><span>D3.js</span><span>WebSocket</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="project-detail-card" data-tilt>
-                                <img src="assets/project4.png" alt="Weather App" class="detail-image" loading="lazy">
-                                <div class="detail-overlay">
-                                    <h3>SkyLens</h3>
-                                    <p>Beautiful weather forecast app with location-based search and 5-day forecasts</p>
-                                    <div class="tech-tags">
-                                        <span>React</span><span>OpenWeather API</span><span>CSS</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="project-detail-card" data-tilt>
-                                <img src="assets/project1.png" alt="DevFlow" class="detail-image" loading="lazy">
-                                <div class="detail-overlay">
-                                    <h3>DevFlow</h3>
-                                    <p>CI/CD pipeline dashboard for monitoring builds, deployments and code quality</p>
-                                    <div class="tech-tags">
-                                        <span>Vue.js</span><span>Docker</span><span>GitHub API</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="project-detail-card" data-tilt>
-                                <img src="assets/project2.png" alt="TaskBoard" class="detail-image" loading="lazy">
-                                <div class="detail-overlay">
-                                    <h3>TaskBoard Pro</h3>
-                                    <p>Kanban-style project management tool with drag-and-drop and team assignments</p>
-                                    <div class="tech-tags">
-                                        <span>React</span><span>Firebase</span><span>DnD</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Personal Section -->
-                    <section class="section" id="section-personal">
-                        <h2 class="section-title">Personal Info</h2>
-                        <div class="personal-content">
-                            <div class="info-card" data-tilt>
-                                <div class="info-icon">
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1.5">
-                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                        <circle cx="12" cy="7" r="4" />
-                                    </svg>
-                                </div>
-                                <h3>About Me</h3>
-                                <p>I'm a passionate full-stack developer with a love for creating beautiful, performant
-                                    web experiences. I enjoy solving complex problems and turning ideas into reality
-                                    through code.</p>
-                            </div>
-                            <div class="info-card" data-tilt>
-                                <div class="info-icon">
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1.5">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <path d="M2 12h20" />
-                                        <path
-                                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                                    </svg>
-                                </div>
-                                <h3>Languages</h3>
-                                <p>Hindi (Native) · English (Fluent)</p>
-                            </div>
-                            <div class="info-card" data-tilt>
-                                <div class="info-icon">
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1.5">
-                                        <polygon
-                                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                    </svg>
-                                </div>
-                                <h3>Interests</h3>
-                                <p>Open Source · System Design · AI/ML · Competitive Programming · Gaming</p>
-                            </div>
-                            <div class="info-card skills-card" data-tilt>
-                                <div class="info-icon">
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1.5">
-                                        <polyline points="16 18 22 12 16 6" />
-                                        <polyline points="8 6 2 12 8 18" />
-                                    </svg>
-                                </div>
-                                <h3>Tech Stack</h3>
-                                <div class="skills-grid">
-                                    <span class="skill-tag">JavaScript</span>
-                                    <span class="skill-tag">TypeScript</span>
-                                    <span class="skill-tag">Python</span>
-                                    <span class="skill-tag">React</span>
-                                    <span class="skill-tag">Next.js</span>
-                                    <span class="skill-tag">Node.js</span>
-                                    <span class="skill-tag">Django</span>
-                                    <span class="skill-tag">PostgreSQL</span>
-                                    <span class="skill-tag">Docker</span>
-                                    <span class="skill-tag">Git</span>
-                                    <span class="skill-tag">AWS</span>
-                                    <span class="skill-tag">MongoDB</span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Career Section -->
-                    <section class="section" id="section-career">
-                        <h2 class="section-title">Career</h2>
-                        <div class="career-timeline">
-                            <div class="timeline-item" data-tilt>
-                                <div class="timeline-dot"></div>
-                                <div class="timeline-content">
-                                    <span class="timeline-date">2024 — Present</span>
-                                    <h3>Open Source Contributor</h3>
-                                    <p class="timeline-company">GreedyBear / IntelOwl</p>
-                                    <p>Contributing to security-focused open source projects. Implemented API
-                                        enhancements, database optimizations, and architectural improvements.</p>
-                                </div>
-                            </div>
-                            <div class="timeline-item" data-tilt>
-                                <div class="timeline-dot"></div>
-                                <div class="timeline-content">
-                                    <span class="timeline-date">2023 — 2024</span>
-                                    <h3>Full Stack Developer</h3>
-                                    <p class="timeline-company">Freelance</p>
-                                    <p>Built production-grade web applications for clients using React, Node.js, and
-                                        cloud services. Focused on performance and user experience.</p>
-                                </div>
-                            </div>
-                            <div class="timeline-item" data-tilt>
-                                <div class="timeline-dot"></div>
-                                <div class="timeline-content">
-                                    <span class="timeline-date">2022 — Present</span>
-                                    <h3>B.Tech Computer Science</h3>
-                                    <p class="timeline-company">IIIT Sonepat</p>
-                                    <p>Pursuing degree in Computer Science with focus on software engineering, data
-                                        structures, and algorithms.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Contact Section -->
-                    <section class="section" id="section-contact">
-                        <h2 class="section-title">Get In Touch</h2>
-                        <div class="contact-content">
-                            <div class="contact-card" data-tilt>
-                                <div class="contact-icon">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1.5">
-                                        <path
-                                            d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                        <polyline points="22,6 12,13 2,6" />
-                                    </svg>
-                                </div>
-                                <h3>Email</h3>
-                                <p>manik@example.com</p>
-                            </div>
-                            <div class="contact-card" data-tilt>
-                                <div class="contact-icon">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1.5">
-                                        <path
-                                            d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                                        <rect x="2" y="9" width="4" height="12" />
-                                        <circle cx="4" cy="4" r="2" />
-                                    </svg>
-                                </div>
-                                <h3>LinkedIn</h3>
-                                <p>linkedin.com/in/manik</p>
-                            </div>
-                            <div class="contact-card" data-tilt>
-                                <div class="contact-icon">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1.5">
-                                        <path
-                                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                                    </svg>
-                                </div>
-                                <h3>GitHub</h3>
-                                <p>github.com/manik</p>
-                            </div>
-                            <div class="contact-card" data-tilt>
-                                <div class="contact-icon">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="1.5">
-                                        <path
-                                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                                    </svg>
-                                </div>
-                                <h3>Phone</h3>
-                                <p>+91 XXXXX XXXXX</p>
-                            </div>
-                        </div>
-                        <div class="contact-form-wrapper">
-                            <form class="contact-form" id="contactForm">
-                                <div class="form-row">
-                                    <input type="text" placeholder="Your Name" class="form-input" id="formName"
-                                        required>
-                                    <input type="email" placeholder="Your Email" class="form-input" id="formEmail"
-                                        required>
-                                </div>
-                                <textarea placeholder="Your Message..." class="form-input form-textarea"
-                                    id="formMessage" rows="4" required></textarea>
-                                <button type="submit" class="submit-btn" id="submitBtn">
-                                    <span>Send Message</span>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <line x1="22" y1="2" x2="11" y2="13" />
-                                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                                    </svg>
-                                </button>
-                            </form>
-                        </div>
-                    </section>
-
-                </main>
-
-                <!-- Right Notes Panel -->
-                <aside class="glass-panel notes-panel" id="notesPanel">
-                    <div class="notes-header">
-                        <h2 class="notes-title">Notes</h2>
-                        <div class="notes-actions">
-                            <button class="notes-action-btn" id="copyNotesBtn" aria-label="Copy">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                                </svg>
-                            </button>
-                            <button class="notes-action-btn" id="moreNotesBtn" aria-label="More options">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <circle cx="12" cy="12" r="1" />
-                                    <circle cx="12" cy="5" r="1" />
-                                    <circle cx="12" cy="19" r="1" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="notes-body">
-                        <span class="notes-label">Title</span>
-                        <h3 class="notes-heading">Welcome to my portfolio!</h3>
-                        <div class="notes-text">
-                            <p>Hello everyone, welcome to my portfolio website! This site offers a 3D-inspired
-                                experience built with pure HTML, CSS, and JavaScript.</p>
-                            <p>I know what you're thinking: "A portfolio website in 3D for a developer? Is that really
-                                necessary?" In short, the answer is no. But it is fun! And it's a great way to showcase
-                                my work.</p>
-                            <p>On this website, you'll find a collection of my projects, personal information and
-                                details about my education and career. I hope you enjoy seeing what I can do. So go take
-                                a look!</p>
-                        </div>
-                    </div>
-                </aside>
-
-            </div>
-
-            <!-- Footer -->
-            <footer class="glass-panel footer" id="footer">
-                <a href="https://linkedin.com" target="_blank" class="footer-link" id="footerLinkedIn">LinkedIn</a>
-                <a href="mailto:manik@example.com" class="footer-link" id="footerEmail">Email</a>
-                <a href="https://github.com" target="_blank" class="footer-link" id="footerGithub">Github</a>
-                <a href="tel:+91" class="footer-link" id="footerPhone">Phone</a>
-            </footer>
-
+function FeatTabs({set}) {
+  const [t, setT] = useState(0);
+  const TABS = [
+    {l:'Open Source', ic:'🔀', h:'Merged 5 PRs in production',
+     p:'Eliminated 15,000+ N+1 queries on GreedyBear, cut CI test time 95%, fixed critical caching bugs, and added rate-limiting to public APIs.'},
+    {l:'AI Projects', ic:'🤖', h:'Building agentic systems',
+     p:'NeverDown: a 5-agent autonomous incident response pipeline. X-Pand: geospatial ML with SHAP explainability at low latency.'},
+    {l:'Hackathons',  ic:'🏆', h:'Won Best Web3 Build',
+     p:'AM Hacks 2.0 at IGDTUW. Multiple national hackathons — shipped complete products in 24–48 hours under pressure.'},
+    {l:'Freelance',   ic:'🚀', h:'Real products, real clients',
+     p:'End-to-end web products for clients using React, Next.js, and Node — wireframe through deployment.'},
+  ];
+  return (
+    <div>
+      <div className="tabs-bar">
+        {TABS.map((tb,i) => <button key={i} className={`tab${t===i?' on':''}`} onClick={()=>setT(i)}>{tb.l}</button>)}
+      </div>
+      <div className="tab-pnl" style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:16}}>
+        <div style={{flex:1}}>
+          <div style={{fontWeight:800,fontSize:15,marginBottom:6}}>{TABS[t].h}</div>
+          <p style={{fontSize:13,color:'#555',lineHeight:1.65,maxWidth:400}}>{TABS[t].p}</p>
+          <button className="btn-w" style={{marginTop:12,padding:'6px 14px',fontSize:12}} onClick={()=>set('proj')}>
+            See all projects →
+          </button>
         </div>
+        <div style={{fontSize:48,flexShrink:0}}>{TABS[t].ic}</div>
+      </div>
     </div>
+  );
+}
 
-    <script src="script.js"></script>
+function Home({set}) {
+  return (
+    <div className="pad">
+      <div style={{display:'flex',gap:28,alignItems:'flex-start',marginBottom:26}}>
+        <div style={{flex:1}}>
+          <div style={{fontSize:11,fontWeight:700,color:'#2563eb',letterSpacing:'0.08em',marginBottom:9}}>
+            👋 OPEN TO OPPORTUNITIES
+          </div>
+          <h1 style={{fontSize:30,fontWeight:800,letterSpacing:'-0.8px',lineHeight:1.1,marginBottom:13,color:'#1a1a1a'}}>
+            The builder who<br/>
+            <span style={{color:'#2563eb'}}>ships</span> &amp; <span style={{color:'#f59e0b'}}>learns.</span>
+          </h1>
+          <p style={{fontSize:14,lineHeight:1.72,color:'#444',marginBottom:20,maxWidth:450}}>
+            Second-year Data Science student at IIIT Sonepat. Merged PRs in a production threat intelligence platform, won hackathons, ships freelance products. Still grinding DSA. Still building. Still shipping&nbsp;🚀
+          </p>
+          <div style={{display:'flex',gap:10,flexWrap:'wrap',marginBottom:16}}>
+            <button className="btn-a" onClick={()=>set('proj')}>View Projects →</button>
+            <button className="btn-w" onClick={()=>set('contact')}>Get in touch</button>
+          </div>
+          <div style={{display:'flex',gap:18,alignItems:'center',flexWrap:'wrap'}}>
+            {[[Icon.github(16),'GitHub',GITHUB],[Icon.linkedin(16),'LinkedIn',LINKEDIN],[Icon.leetcode(16),'LeetCode',LEETCODE]].map(([ic,l,h])=>(
+              <a key={l} href={h} target="_blank" rel="noreferrer" className="link-u">{ic} {l}</a>
+            ))}
+          </div>
+        </div>
+        <div style={{flexShrink:0}}>
+          <div style={{width:118,height:118,borderRadius:'50%',overflow:'hidden',border:'3px solid #1a1a1a',boxShadow:'4px 4px 0 #1a1a1a',background:'#e5e0d5'}}>
+            <img src="assets/dp.png" alt="Manik" style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+          </div>
+        </div>
+      </div>
+
+      <div style={{display:'flex',gap:10,flexWrap:'wrap',marginBottom:26}}>
+        {[['9.49/10','SGPA'],['Top 2.5%','JEE 2024'],['500+','DSA Solved'],['15k+','Queries Fixed'],['5 PRs','Merged']].map(([n,l])=>(
+          <div key={l} className="stat"><div className="stat-n">{n}</div><div className="stat-l">{l}</div></div>
+        ))}
+      </div>
+
+      <FeatTabs set={set}/>
+    </div>
+  );
+}
+
+function About() {
+  return (
+    <div className="pad">
+      <div className="stitle">About me</div>
+      <div className="ssub">Student. Builder. Open-source contributor.</div>
+
+      <p style={{fontSize:14,lineHeight:1.75,color:'#444',marginBottom:26,maxWidth:560}}>
+        I'm Manik — a second-year Data Science student at IIIT Sonepat. I interned at LabelNest India, got into open source, and ended up with merged PRs in a production threat intelligence platform. I do hackathons when I can and have won some. I build freelance products for clients on the side. Grinding DSA and still going. Still building, still learning, still shipping 🚀
+      </p>
+
+      <div style={{fontSize:14,fontWeight:800,marginBottom:12}}>Education</div>
+      {[
+        {sch:'Indian Institute of Information Technology, Sonepat',
+         deg:'B.Tech — CSE (Data Science &amp; Analytics)',
+         meta:'Aug 2024 – Jun 2028 (Expected)',
+         grade:'SGPA: 9.49 / 10', gc:'#15803d', gBg:'#dcfce7', gBd:'#16a34a'},
+        {sch:'The SD Vidya School, Ambala',
+         deg:'CBSE (Class X &amp; XII)',
+         meta:'April 2024',
+         grade:'Class X: 97%  ·  Class XII: 90.8%', gc:'#1d4ed8', gBg:'#dbeafe', gBd:'#2563eb'},
+      ].map(e=>(
+        <div key={e.sch} className="card">
+          <div style={{fontSize:14,fontWeight:800,marginBottom:3}}>{e.sch}</div>
+          <div style={{fontSize:12,fontWeight:600,color:'#2563eb',marginBottom:3}} dangerouslySetInnerHTML={{__html:e.deg}}/>
+          <div style={{fontSize:11,color:'#999',marginBottom:8}}>{e.meta}</div>
+          <span style={{display:'inline-block',background:e.gBg,border:`1.5px solid ${e.gBd}`,borderRadius:4,padding:'2px 9px',fontSize:11,fontWeight:700,color:e.gc}}>{e.grade}</span>
+        </div>
+      ))}
+
+      <div style={{fontSize:14,fontWeight:800,margin:'22px 0 12px'}}>Achievements</div>
+      <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+        {[['🏆','Best Web3 Build — AM Hacks 2.0 IGDTUW'],['🎯','Top 2.5% · JEE 2024 (1.4M+ candidates)'],['💻','500+ DSA problems solved'],['🔀','15,000+ DB queries optimised in prod']].map(([ic,t])=>(
+          <div key={t} className="badge"><span style={{fontSize:17}}>{ic}</span>{t}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Projects() {
+  const [a, setA] = useState(0);
+  return (
+    <div className="pad">
+      <div className="stitle">Projects</div>
+      <div className="ssub">Things I've built and shipped.</div>
+
+      <div style={{display:'flex',gap:8,marginBottom:16,flexWrap:'wrap'}}>
+        {PROJ.map((p,i)=>(
+          <button key={p.id} onClick={()=>setA(i)} style={{
+            padding:'6px 14px',fontSize:12,fontWeight:600,cursor:'pointer',
+            background:i===a?'#2563eb':'#fff',color:i===a?'#fff':'#1a1a1a',
+            border:'1.5px solid #1a1a1a',borderRadius:4,
+            boxShadow:i===a?'2px 2px 0 #1a1a1a':'none',
+            fontFamily:'Space Grotesk,sans-serif',transition:'all .12s'
+          }}>{p.name}</button>
+        ))}
+      </div>
+
+      {PROJ.map((p,i)=> i===a && (
+        <div key={p.id} style={{border:'2px solid #1a1a1a',borderRadius:8,padding:'22px',background:'#fff',boxShadow:'5px 5px 0 #1a1a1a'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:12}}>
+            <div>
+              <h3 style={{fontSize:21,fontWeight:800,marginBottom:3}}>{p.name}</h3>
+              <p style={{fontSize:12,color:'#2563eb',fontWeight:600}}>{p.sub}</p>
+            </div>
+            <div style={{width:52,height:52,borderRadius:10,background:p.bg,border:'2px solid #1a1a1a',display:'flex',alignItems:'center',justifyContent:'center',fontSize:26,boxShadow:'2px 2px 0 #1a1a1a'}}>{p.em}</div>
+          </div>
+          <p style={{fontSize:13,color:'#555',lineHeight:1.65,marginBottom:16}}>{p.desc}</p>
+          <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:18}}>
+            {p.tags.map(t=><span key={t} className="tag">{t}</span>)}
+          </div>
+          <a href={GITHUB} target="_blank" rel="noreferrer" className="btn-a" style={{fontSize:12,padding:'8px 16px'}}>View on GitHub →</a>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SkillsPage() {
+  return (
+    <div className="pad">
+      <div className="stitle">Skills</div>
+      <div className="ssub">The full stack — from ML pipelines to browser IDEs.</div>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(188px,1fr))',gap:12}}>
+        {SKILLS.map(sg=>(
+          <div key={sg.g} style={{border:'1.5px solid #1a1a1a',borderRadius:6,padding:'14px',background:'#fff',boxShadow:'2px 2px 0 #1a1a1a'}}>
+            <div style={{fontSize:10,fontWeight:800,letterSpacing:'0.09em',textTransform:'uppercase',marginBottom:10,color:'#2563eb'}}>{sg.g}</div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
+              {sg.items.map(it=>(
+                <span key={it} style={{fontSize:11,fontWeight:600,padding:'3px 7px',border:'1px solid #d4cfc7',borderRadius:3,background:'#f9f7f2',color:'#1a1a1a'}}>{it}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Exp() {
+  return (
+    <div className="pad">
+      <div className="stitle">Experience</div>
+      <div className="ssub">Where I've shipped in the real world.</div>
+      {[
+        {co:'LabelNest India Pvt. Ltd.', role:'Data Annotation Intern',
+         date:'Dec 2025 – Feb 2026', loc:'Remote · Bangalore', chipBg:'#dbeafe',
+         pts:['Annotated & validated datasets for enterprise clients (Infosys) via internal QA pipelines.','Managed tasks on AnnoNest platform — enabled 20% faster service delivery.','Drove 30% reduction in rework and errors under tight timelines.']},
+        {co:'GreedyBear (Open Source)', role:'Contributor',
+         date:'Ongoing', loc:'Remote', chipBg:'#fef3c7',
+         pts:['Eliminated 15,000+ N+1 queries/run via Django ORM bulk prefetching (PR #1020, #1118).','Rate-limited public APIs & fixed critical caching bugs in enrichment flows (PR #927, #1132).','Cut CI test time 95% — from 15s to <400ms — refactoring React + Vitest state (PR #1151).']},
+      ].map(e=>(
+        <div key={e.co} className="card">
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:6}}>
+            <div>
+              <div style={{fontSize:15,fontWeight:800}}>{e.co}</div>
+              <div style={{fontSize:12,fontWeight:600,color:'#2563eb',marginTop:2}}>{e.role}</div>
+            </div>
+            <span style={{fontSize:11,fontWeight:700,padding:'3px 9px',border:'1.5px solid #1a1a1a',borderRadius:4,background:e.chipBg,whiteSpace:'nowrap'}}>{e.date}</span>
+          </div>
+          <div style={{fontSize:11,color:'#aaa',marginBottom:10}}>{e.loc}</div>
+          <ul style={{paddingLeft:16}}>
+            {e.pts.map((pt,i)=><li key={i} style={{fontSize:13,color:'#444',lineHeight:1.65,marginBottom:4}}>{pt}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Contact() {
+  return (
+    <div className="pad">
+      <div className="stitle">Get in touch</div>
+      <p style={{fontSize:14,color:'#555',lineHeight:1.65,marginBottom:24,maxWidth:450}}>
+        Open for internships, freelance builds, and interesting conversations. Reach me anywhere below.
+      </p>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:12,maxWidth:500,marginBottom:22}}>
+        {[
+          {ic:'📧',l:'Email',v:EMAIL,h:`mailto:${EMAIL}`},
+          {ic:Icon.github(24),l:'GitHub',v:'github.com/manik3160',h:GITHUB},
+          {ic:Icon.linkedin(24),l:'LinkedIn',v:'linkedin.com/in/manik',h:LINKEDIN},
+          {ic:Icon.leetcode(24),l:'LeetCode',v:'leetcode.com/manik',h:LEETCODE},
+        ].map(c=>(
+          <a key={c.l} href={c.h} target="_blank" rel="noreferrer" className="card" style={{display:'flex',alignItems:'center',gap:12,textDecoration:'none',color:'#1a1a1a',marginBottom:0,transition:'transform .1s,box-shadow .1s'}}
+             onMouseEnter={e=>{e.currentTarget.style.transform='translate(-2px,-2px)';e.currentTarget.style.boxShadow='5px 5px 0 #1a1a1a'}}
+             onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='3px 3px 0 #1a1a1a'}}>
+            <span style={{fontSize:24,flexShrink:0}}>{c.ic}</span>
+            <div><div style={{fontSize:13,fontWeight:700}}>{c.l}</div><div style={{fontSize:11,color:'#999',marginTop:1}}>{c.v}</div></div>
+          </a>
+        ))}
+      </div>
+      <div style={{padding:'14px 16px',border:'2px dashed #1a1a1a',borderRadius:6,background:'#fef3c7',maxWidth:500,display:'flex',gap:10,alignItems:'center'}}>
+        <span style={{fontSize:20}}>📍</span>
+        <div>
+          <div style={{fontSize:13,fontWeight:700}}>Available for remote opportunities</div>
+          <div style={{fontSize:12,color:'#777',marginTop:2}}>Based in Sonepat, India. Open to remote internships and global roles.</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function IsoScene() {
+  return (
+    <svg viewBox="0 0 140 115" xmlns="http://www.w3.org/2000/svg" style={{width:'100%',marginTop:6}}>
+      <ellipse cx="70" cy="102" rx="56" ry="10" fill="#e0d9cc" opacity="0.6"/>
+      <polygon points="68,28 88,18 88,70 68,80" fill="#2563eb"/>
+      <polygon points="88,18 108,28 108,80 88,70" fill="#1d4ed8"/>
+      <polygon points="68,28 88,18 108,28 88,38" fill="#60a5fa"/>
+      <polygon points="28,54 48,44 48,76 28,86" fill="#f59e0b"/>
+      <polygon points="48,44 68,54 68,86 48,76" fill="#d97706"/>
+      <polygon points="28,54 48,44 68,54 48,64" fill="#fbbf24"/>
+      <polygon points="50,26 63,19 63,42 50,49" fill="#16a34a"/>
+      <polygon points="63,19 76,26 76,49 63,42" fill="#15803d"/>
+      <polygon points="50,26 63,19 76,26 63,33" fill="#4ade80"/>
+      <circle cx="114" cy="16" r="3" fill="#f59e0b" opacity="0.75"/>
+      <circle cx="20" cy="42" r="2.5" fill="#2563eb" opacity="0.65"/>
+      <circle cx="120" cy="52" r="2" fill="#16a34a" opacity="0.65"/>
+      <text x="10" y="20" fontSize="9" fill="#1a1a1a" opacity="0.3" fontFamily="monospace">{"</>"}</text>
+      <text x="108" y="13" fontSize="8" fill="#1a1a1a" opacity="0.3" fontFamily="monospace">{"{}"}</text>
+    </svg>
+  );
+}
+
+function RightPanel({set}) {
+  const links = [
+    {ic:Icon.github(24), l:'GitHub',       h:GITHUB},
+    {ic:Icon.linkedin(24), l:'LinkedIn',     h:LINKEDIN},
+    {ic:Icon.leetcode(24), l:'LeetCode',     h:LEETCODE},
+    {ic:'📧', l:'Email Me',     h:`mailto:${EMAIL}`},
+    {ic:'🏆', l:'Achievements', h:null, fn:()=>set('about')},
+    {ic:'📄', l:'Download CV',  h:'#', title:'CV coming soon'},
+  ];
+  return (
+    <aside className="rpanel">
+      {links.map(({ic,l,h,fn,title})=>(
+        <a key={l} href={h||'#'} title={title}
+           target={h&&!h.startsWith('mailto')&&h!=='#'?'_blank':undefined}
+           rel={h&&!h.startsWith('mailto')&&h!=='#'?'noreferrer':undefined}
+           onClick={fn||undefined} className="rp">
+          <div className="rp-ic">{ic}</div>
+          <span className="rp-lbl">{l}</span>
+        </a>
+      ))}
+      <div className="rp-div"/>
+      <IsoScene/>
+    </aside>
+  );
+}
+
+const FILES = {home:'home.mdx',about:'about.mdx',proj:'projects/index.mdx',skills:'skills.mdx',exp:'experience.mdx',contact:'contact.mdx'};
+
+function App() {
+  const [s, setS] = useState('home');
+  const content = {
+    home:<Home set={setS}/>,
+    about:<About/>,
+    proj:<Projects/>,
+    skills:<SkillsPage/>,
+    exp:<Exp/>,
+    contact:<Contact/>,
+  };
+  return (
+    <div style={{fontFamily:"'Space Grotesk',sans-serif",height:'100vh',display:'flex',flexDirection:'column'}}>
+      <Nav s={s} set={setS}/>
+      <div className="workspace">
+        <Sidebar s={s} set={setS}/>
+        <div className="ew">
+          <div className="win">
+            <WinBar title={FILES[s]}/>
+            <Toolbar/>
+            <div className="scr">{content[s]}</div>
+          </div>
+        </div>
+        <RightPanel set={setS}/>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
 </body>
-
 </html>
