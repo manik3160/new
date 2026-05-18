@@ -184,15 +184,48 @@ const Icon = {
       <path d="M12 4l-4 12" stroke="#fff" strokeWidth="1.6" strokeLinecap="round"/>
     </svg>
   ),
+  home: (s=16) => (
+    <svg width={s} height={s} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 9.5L10 3l7 6.5" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M5 8.5V16a.5.5 0 0 0 .5.5H8.5V13h3v3.5h3a.5.5 0 0 0 .5-.5V8.5" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  about: (s=16) => (
+    <svg width={s} height={s} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10" cy="7" r="3" stroke="#fff" strokeWidth="1.6"/>
+      <path d="M3.5 17c0-3.59 2.91-6.5 6.5-6.5s6.5 2.91 6.5 6.5" stroke="#fff" strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  ),
+  proj: (s=16) => (
+    <svg width={s} height={s} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="5" width="7" height="7" rx="1.5" stroke="#fff" strokeWidth="1.6"/>
+      <rect x="11" y="5" width="7" height="7" rx="1.5" stroke="#fff" strokeWidth="1.6"/>
+      <rect x="2" y="14" width="7" height="3.5" rx="1.5" stroke="#fff" strokeWidth="1.6"/>
+      <rect x="11" y="14" width="7" height="3.5" rx="1.5" stroke="#fff" strokeWidth="1.6"/>
+    </svg>
+  ),
+  exp: (s=16) => (
+    <svg width={s} height={s} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="7" width="16" height="10" rx="1.5" stroke="#fff" strokeWidth="1.6"/>
+      <path d="M7 7V5.5A1.5 1.5 0 0 1 8.5 4h3A1.5 1.5 0 0 1 13 5.5V7" stroke="#fff" strokeWidth="1.6" strokeLinecap="round"/>
+      <path d="M2 11h16" stroke="#fff" strokeWidth="1.4" strokeLinecap="round"/>
+    </svg>
+  ),
+  contact: (s=16) => (
+    <svg width={s} height={s} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="4.5" width="16" height="11" rx="1.5" stroke="#fff" strokeWidth="1.6"/>
+      <path d="M2 6.5l8 5.5 8-5.5" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
 };
 
 const SECS = [
-  {id:'home',   file:'home.mdx',        bg:'#f59e0b', em:'🏠'},
-  {id:'about',  file:'about.mdx',       bg:'#2563eb', em:'👤'},
-  {id:'proj',   file:'projects/',       bg:'#7c3aed', em:'📁'},
+  {id:'home',   file:'home.mdx',        bg:'#f59e0b', em:Icon.home(15)},
+  {id:'about',  file:'about.mdx',       bg:'#2563eb', em:Icon.about(15)},
+  {id:'proj',   file:'projects/',       bg:'#7c3aed', em:Icon.proj(14)},
   {id:'skills', file:'skills.mdx',      bg:'#16a34a', em:Icon.skills(15)},
-  {id:'exp',    file:'experience.mdx',  bg:'#dc2626', em:'💼'},
-  {id:'contact',file:'contact.mdx',     bg:'#0891b2', em:'✉️'},
+  {id:'exp',    file:'experience.mdx',  bg:'#dc2626', em:Icon.exp(15)},
+  {id:'contact',file:'contact.mdx',     bg:'#0891b2', em:Icon.contact(15)},
 ];
 
 const PROJ = [
