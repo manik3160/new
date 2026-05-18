@@ -270,39 +270,39 @@ const PROJ = [
    img:'assets/nyay.png',
    desc:'Legal-tech assistant that drafts petitions, notices, and contracts grounded in Indian law. Built for advocates who want speed without sacrificing precision.',
    tags:['Next.js','LLM','RAG','LegalTech'],
-   github:'https://github.com/manik3160/NyayaAI', live:null},
+   github:GITHUB, live:null},
   {page:1, id:'railway', name:'RailTwin', sub:'AI-Powered Spatial Asset Intelligence',
    img:'assets/railway.png',
    desc:'A living digital twin of every railway and urban asset in India. Auto-updated from satellite + drone imagery, queryable in plain English, actionable for officers at every level.',
    tags:['Python','GIS','Computer Vision','DIGIT','LLM'],
-   github:'https://github.com/manik3160/RailTwin', live:'https://hackzilla-landing-page.vercel.app/'},
+   github:'https://github.com/manik3160/Railway', live:'https://hackzilla-landing-page.vercel.app/'},
   {page:1, id:'vibecode', name:'VibeCode Editor', sub:'AI-Assisted Browser IDE',
    img:'assets/Vibecode.jpeg',
    desc:'Browser-based full-stack IDE with local Ollama LLMs and isolated WebContainers. Real-time, context-aware AI code generation — runs entirely in the browser.',
    tags:['Next.js 15','TypeScript','WebContainers','Ollama','xterm.js'],
-   github:'https://github.com/manik3160/vibe-code-editor', live:'https://vibe-code-editor.vercel.app/'},
+   github:'https://github.com/manik3160/VibeCodeEditor', live:'https://vibe-code-editor.vercel.app/'},
   {page:1, id:'llm', name:'Consensus', sub:'Decentralized AI Social Platform',
    img:'assets/llm.png',
    desc:'A social platform where LLM-backed agents post and humans verify via on-chain staking and voting. Solidity contracts + Node agent server + Next.js frontend.',
    tags:['Next.js','Solidity','LLM Agents','IPFS','Ethers.js'],
-   github:'https://github.com/manik3160/crypto-llm', live:'https://crypto-llm.vercel.app/'},
+   github:'https://github.com/SamarthSrivastavaa/llmSocial', live:'https://crypto-llm.vercel.app/'},
 
   // Page 2
   {page:2, id:'riverflow', name:'Riverflow', sub:'Real-Time Data Streaming App',
    img:'assets/Riverflow.jpeg',
    desc:'A clean, modern interface for streaming and visualising real-time data flows. Built with a focus on responsive UI and smooth animations.',
    tags:['React','Node.js','WebSockets','Tailwind'],
-   github:'https://github.com/manik3160/Riverflow', live:null},
+   github:'https://github.com/manik3160/Stack-Overflow', live:null},
   {page:2, id:'teach', name:'TeachHub', sub:'Learning Platform',
    img:'assets/teach.jpeg',
    desc:'An interactive learning platform with course management, progress tracking, and a clean reader experience for students.',
    tags:['Next.js','TypeScript','MongoDB','Tailwind'],
-   github:'https://github.com/manik3160/TeachHub', live:null},
-  {page:2, id:'vid', name:'VidStream', sub:'Video Streaming Experience',
+   github:'https://github.com/manik3160/Ai-TeachingAssisstant', live:null},
+  {page:2, id:'vid', name:'VidSnap AI', sub:'Video Streaming Experience',
    img:'assets/Vid.jpeg',
    desc:'Full-stack video streaming app with adaptive playback, custom controls, and a creator-friendly upload flow.',
    tags:['React','Node.js','FFmpeg','AWS S3'],
-   github:'https://github.com/manik3160/VidStream', live:'https://vidsnap-ai.onrender.com/'},
+   github:'https://github.com/manik3160/VidSnap-AI', live:'https://vidsnap-ai.onrender.com/'},
 ];
 
 const SKILLS = [
@@ -650,12 +650,22 @@ function Exp() {
       <div className="stitle">Experience</div>
       <div className="ssub">Where I've shipped in the real world.</div>
       {[
+        {co:'NavKar Systems', role:'Freelance Engineer',
+         date:'May 2026', loc:'Remote · Freelance', chipBg:'#dcfce7',
+         pts:[
+           'Built a production-ready barcode-driven inventory CRM for a CCTV hardware business — covering inward scanning, dispatch, returns, and full order management.',
+           'Designed a FastAPI + PostgreSQL backend with a 9-table ACID schema, JWT auth, and role-based access control across 3 staff tiers (Admin, Dispatch, Sales).',
+           'Delivered a Next.js 14 web dashboard + React Native (Expo) mobile app with Docker Compose dev environment and Railway/Vercel production deployment.',
+         ],
+         links:[]},
         {co:'LabelNest India Pvt. Ltd.', role:'Data Annotation Intern',
          date:'Dec 2025 – Feb 2026', loc:'Remote · Bangalore', chipBg:'#dbeafe',
-         pts:['Annotated & validated datasets for enterprise clients (Infosys) via internal QA pipelines.','Managed tasks on AnnoNest platform — enabled 20% faster service delivery.','Drove 30% reduction in rework and errors under tight timelines.']},
+         pts:['Annotated & validated datasets for enterprise clients (Infosys) via internal QA pipelines.','Managed tasks on AnnoNest platform — enabled 20% faster service delivery.','Drove 30% reduction in rework and errors under tight timelines.'],
+         links:[{label:'📄 Recommendation Letter', href:'https://drive.google.com/file/d/14SR5c3CBxvxDOoBcYAZ24I1KmnVquFWt/view?usp=sharing', bg:'#dbeafe'}]},
         {co:'GreedyBear (Open Source)', role:'Contributor',
          date:'Ongoing', loc:'Remote', chipBg:'#fef3c7',
-         pts:['Contributed 15+ merged PRs across security, performance, and feature development.','Improved API reliability, database efficiency, and backend infrastructure.','Collaborated with maintainers through code reviews on a production threat intelligence platform.']},
+         pts:['Contributed 15+ merged PRs across security, performance, and feature development.','Improved API reliability, database efficiency, and backend infrastructure.','Collaborated with maintainers through code reviews on a production threat intelligence platform.'],
+         links:[{label:'View on GitHub →', href:'https://github.com/GreedyBear-Project/GreedyBear', bg:'#fef3c7'}]},
       ].map(e=>(
         <div key={e.co} className="card">
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:6}}>
@@ -666,9 +676,21 @@ function Exp() {
             <span style={{fontSize:11,fontWeight:700,padding:'3px 9px',border:'1.5px solid #1a1a1a',borderRadius:4,background:e.chipBg,whiteSpace:'nowrap'}}>{e.date}</span>
           </div>
           <div style={{fontSize:11,color:'#aaa',marginBottom:10}}>{e.loc}</div>
-          <ul style={{paddingLeft:16}}>
+          <ul style={{paddingLeft:16,marginBottom:12}}>
             {e.pts.map((pt,i)=><li key={i} style={{fontSize:13,color:'#444',lineHeight:1.65,marginBottom:4}}>{pt}</li>)}
           </ul>
+          {e.links && (
+            <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+              {e.links.map(({label,href,bg})=>(
+                <a key={label} href={href} target="_blank" rel="noreferrer"
+                   style={{display:'inline-flex',alignItems:'center',gap:5,fontSize:11,fontWeight:700,padding:'4px 10px',border:'1.5px solid #1a1a1a',borderRadius:4,background:bg,color:'#1a1a1a',textDecoration:'none',boxShadow:'1px 1px 0 #1a1a1a',transition:'transform .1s,box-shadow .1s'}}
+                   onMouseEnter={e=>{e.currentTarget.style.transform='translate(-1px,-1px)';e.currentTarget.style.boxShadow='2px 2px 0 #1a1a1a'}}
+                   onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='1px 1px 0 #1a1a1a'}}>
+                  {label}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </div>
@@ -701,7 +723,7 @@ function Contact() {
         <span style={{fontSize:20}}>📍</span>
         <div>
           <div style={{fontSize:13,fontWeight:700}}>Available for remote opportunities</div>
-          <div style={{fontSize:12,color:'#777',marginTop:2}}>Based in Sonepat, India. Open to remote internships and global roles.</div>
+          <div style={{fontSize:12,color:'#777',marginTop:2}}>Based in New Delhi, India. Open to remote internships and global roles.</div>
         </div>
       </div>
     </div>
