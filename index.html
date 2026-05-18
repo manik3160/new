@@ -321,37 +321,51 @@ function Home({set}) {
 function About() {
   return (
     <div className="pad">
-      <div className="stitle">About me</div>
-      <div className="ssub">Student. Builder. Open-source contributor.</div>
+      <div style={{display:'flex',gap:28,alignItems:'flex-start'}}>
+        <div style={{flex:1,minWidth:0}}>
+          <div className="stitle">About me</div>
+          <div className="ssub">Student. Builder. Open-source contributor.</div>
 
-      <p style={{fontSize:14,lineHeight:1.75,color:'#444',marginBottom:26,maxWidth:560}}>
-        I'm Manik — a second-year Data Science student at IIIT Sonepat. I interned at LabelNest India, got into open source, and ended up with merged PRs in a production threat intelligence platform. I do hackathons when I can and have won some. I build freelance products for clients on the side. Grinding DSA and still going. Still building, still learning, still shipping 🚀
-      </p>
+          <p style={{fontSize:14,lineHeight:1.75,color:'#444',marginBottom:26,maxWidth:560}}>
+            I'm Manik — a second-year Data Science student at IIIT Sonepat. I interned at LabelNest India, got into open source, and ended up with merged PRs in a production threat intelligence platform. I do hackathons when I can and have won some. I build freelance products for clients on the side. Grinding DSA and still going. Still building, still learning, still shipping 🚀
+          </p>
 
-      <div style={{fontSize:14,fontWeight:800,marginBottom:12}}>Education</div>
-      {[
-        {sch:'Indian Institute of Information Technology, Sonepat',
-         deg:'B.Tech — CSE (Data Science &amp; Analytics)',
-         meta:'Aug 2024 – Jun 2028 (Expected)',
-         grade:'SGPA: 9.49 / 10', gc:'#15803d', gBg:'#dcfce7', gBd:'#16a34a'},
-        {sch:'The SD Vidya School, Ambala',
-         deg:'CBSE (Class X &amp; XII)',
-         meta:'April 2024',
-         grade:'Class X: 97%  ·  Class XII: 90.8%', gc:'#1d4ed8', gBg:'#dbeafe', gBd:'#2563eb'},
-      ].map(e=>(
-        <div key={e.sch} className="card">
-          <div style={{fontSize:14,fontWeight:800,marginBottom:3}}>{e.sch}</div>
-          <div style={{fontSize:12,fontWeight:600,color:'#2563eb',marginBottom:3}} dangerouslySetInnerHTML={{__html:e.deg}}/>
-          <div style={{fontSize:11,color:'#999',marginBottom:8}}>{e.meta}</div>
-          <span style={{display:'inline-block',background:e.gBg,border:`1.5px solid ${e.gBd}`,borderRadius:4,padding:'2px 9px',fontSize:11,fontWeight:700,color:e.gc}}>{e.grade}</span>
+          <div style={{fontSize:14,fontWeight:800,marginBottom:12}}>Education</div>
+          {[
+            {sch:'Indian Institute of Information Technology, Sonepat',
+             deg:'B.Tech — CSE (Data Science &amp; Analytics)',
+             meta:'Aug 2024 – Jun 2028 (Expected)',
+             grade:'SGPA: 9.49 / 10', gc:'#15803d', gBg:'#dcfce7', gBd:'#16a34a'},
+            {sch:'The SD Vidya School, Ambala',
+             deg:'CBSE (Class X &amp; XII)',
+             meta:'April 2024',
+             grade:'Class X: 97%  ·  Class XII: 90.8%', gc:'#1d4ed8', gBg:'#dbeafe', gBd:'#2563eb'},
+          ].map(e=>(
+            <div key={e.sch} className="card">
+              <div style={{fontSize:14,fontWeight:800,marginBottom:3}}>{e.sch}</div>
+              <div style={{fontSize:12,fontWeight:600,color:'#2563eb',marginBottom:3}} dangerouslySetInnerHTML={{__html:e.deg}}/>
+              <div style={{fontSize:11,color:'#999',marginBottom:8}}>{e.meta}</div>
+              <span style={{display:'inline-block',background:e.gBg,border:`1.5px solid ${e.gBd}`,borderRadius:4,padding:'2px 9px',fontSize:11,fontWeight:700,color:e.gc}}>{e.grade}</span>
+            </div>
+          ))}
+
+          <div style={{fontSize:14,fontWeight:800,margin:'22px 0 12px'}}>Achievements</div>
+          <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+            {[['🏆','Best Web3 Build — AM Hacks 2.0 IGDTUW'],['🎯','Top 2.5% · JEE 2024 (1.4M+ candidates)'],['💻','500+ DSA problems solved'],['🔀','15,000+ DB queries optimised in prod']].map(([ic,t])=>(
+              <div key={t} className="badge"><span style={{fontSize:17}}>{ic}</span>{t}</div>
+            ))}
+          </div>
         </div>
-      ))}
 
-      <div style={{fontSize:14,fontWeight:800,margin:'22px 0 12px'}}>Achievements</div>
-      <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
-        {[['🏆','Best Web3 Build — AM Hacks 2.0 IGDTUW'],['🎯','Top 2.5% · JEE 2024 (1.4M+ candidates)'],['💻','500+ DSA problems solved'],['🔀','15,000+ DB queries optimised in prod']].map(([ic,t])=>(
-          <div key={t} className="badge"><span style={{fontSize:17}}>{ic}</span>{t}</div>
-        ))}
+        {/* Photo card */}
+        <div style={{width:190,borderRadius:12,overflow:'hidden',border:'2px solid var(--ink)',boxShadow:'var(--shadow)',flexShrink:0,alignSelf:'flex-start',position:'sticky',top:0}}>
+          <img src="assets/dp.png" alt="Manik" style={{width:'100%',display:'block',objectFit:'cover'}}/>
+          <div style={{background:'linear-gradient(transparent,rgba(0,0,0,0.72))',marginTop:-60,padding:'60px 12px 14px'}}>
+            <div style={{fontSize:11,color:'rgba(255,255,255,0.75)',marginBottom:2}}>New Delhi, India</div>
+            <div style={{fontSize:16,fontWeight:800,color:'#fff',marginBottom:2}}>Manik</div>
+            <div style={{fontSize:11,color:'rgba(255,255,255,0.75)'}}>20 years old</div>
+          </div>
+        </div>
       </div>
     </div>
   );
