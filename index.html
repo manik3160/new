@@ -81,6 +81,22 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
 .badge{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--ink);border-radius:6px;padding:8px 12px;background:#fef3c7;box-shadow:var(--shadow-sm);font-size:12px;font-weight:700}
 
+.proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.proj-card{border:2px solid var(--ink);border-radius:8px;background:#fff;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:transform .12s,box-shadow .12s}
+.proj-card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.proj-img{width:100%;aspect-ratio:16/10;object-fit:cover;border-bottom:2px solid var(--ink);background:#f3ede0;display:block}
+.proj-body{padding:16px 18px;display:flex;flex-direction:column;flex:1}
+.proj-name{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:2px}
+.proj-sub{font-size:11px;font-weight:600;color:var(--blue);margin-bottom:9px}
+.proj-desc{font-size:12.5px;color:#555;line-height:1.6;margin-bottom:12px;flex:1}
+.proj-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.proj-tag{font-size:10px;font-weight:600;padding:2px 7px;border:1.5px solid var(--blue);border-radius:3px;background:#dbeafe;color:#1d4ed8}
+.proj-cta{display:flex;gap:8px}
+.proj-cta a{font-size:11px;padding:6px 12px;border-radius:4px;border:1.5px solid var(--ink);font-weight:700;text-decoration:none;color:var(--ink);box-shadow:2px 2px 0 var(--ink);transition:transform .1s,box-shadow .1s}
+.proj-cta a:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+.proj-cta .live{background:var(--amber)}
+.proj-cta .gh{background:#fff}
+
 .rpanel{width:152px;border-left:var(--border);padding:12px 7px;display:flex;flex-direction:column;gap:4px;background:rgba(243,237,224,.4);flex-shrink:0;overflow-y:auto}
 .rp{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 4px;border-radius:6px;cursor:pointer;border:1.5px solid transparent;text-decoration:none;transition:background .12s}
 .rp:hover{background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.15)}
@@ -130,18 +146,53 @@ const SECS = [
 ];
 
 const PROJ = [
-  {id:'nd', name:'NeverDown', sub:'Autonomous Multi-Agent AI System', em:'🤖',
-   desc:'Five-agent LLM pipeline with secure Docker sandboxing. Dynamically localizes CI bugs and auto-generates verified code patches — no human in the loop.',
+  {page:1, id:'neverdown', name:'NeverDown', sub:'Autonomous Multi-Agent AI System',
+   img:'assets/neverdown.png',
+   desc:'Five-agent LLM pipeline with secure Docker sandboxing. Auto-localizes CI bugs and generates verified code patches — no human in the loop.',
    tags:['Python','LLM APIs','Docker','Multi-Agent','GitHub Actions'],
-   bg:'#dbeafe'},
-  {id:'xp', name:'X-Pand', sub:'Geospatial ML Prediction Platform', em:'🌍',
-   desc:'End-to-end ML pipeline for real-time geospatial predictions. Vectorized SHAP computations for low-latency explainable inference at scale.',
-   tags:['Python','FastAPI','React','Scikit-Learn','SHAP','Pandas','NumPy'],
-   bg:'#dcfce7'},
-  {id:'vc', name:'VibeCode Editor', sub:'AI-Assisted Browser IDE', em:'💻',
+   github:GITHUB, live:'https://neverdown-web.vercel.app/'},
+  {page:1, id:'xpand', name:'X-Pand', sub:'Geospatial ML Prediction Platform',
+   img:'assets/xpand.png',
+   desc:'End-to-end ML pipeline for real-time geospatial predictions. Vectorized SHAP for low-latency explainable inference at scale.',
+   tags:['Python','FastAPI','React','Scikit-Learn','SHAP'],
+   github:GITHUB, live:'https://x-pand.vercel.app/'},
+  {page:1, id:'nyay', name:'NyayaAI', sub:'AI Drafting Copilot for Indian Advocates',
+   img:'assets/nyay.png',
+   desc:'Legal-tech assistant that drafts petitions, notices, and contracts grounded in Indian law. Built for advocates who want speed without sacrificing precision.',
+   tags:['Next.js','LLM','RAG','LegalTech'],
+   github:GITHUB, live:null},
+  {page:1, id:'railway', name:'RailTwin', sub:'AI-Powered Spatial Asset Intelligence',
+   img:'assets/railway.png',
+   desc:'A living digital twin of every railway and urban asset in India. Auto-updated from satellite + drone imagery, queryable in plain English, actionable for officers at every level.',
+   tags:['Python','GIS','Computer Vision','DIGIT','LLM'],
+   github:GITHUB, live:'https://hackzilla-landing-page.vercel.app/'},
+  {page:1, id:'vibecode', name:'VibeCode Editor', sub:'AI-Assisted Browser IDE',
+   img:'assets/Vibecode.jpeg',
    desc:'Browser-based full-stack IDE with local Ollama LLMs and isolated WebContainers. Real-time, context-aware AI code generation — runs entirely in the browser.',
    tags:['Next.js 15','TypeScript','WebContainers','Ollama','xterm.js'],
-   bg:'#fef3c7'},
+   github:GITHUB, live:'https://vibe-code-editor.vercel.app/'},
+  {page:1, id:'llm', name:'Consensus', sub:'Decentralized AI Social Platform',
+   img:'assets/llm.png',
+   desc:'A social platform where LLM-backed agents post and humans verify via on-chain staking and voting. Solidity contracts + Node agent server + Next.js frontend.',
+   tags:['Next.js','Solidity','LLM Agents','IPFS','Ethers.js'],
+   github:GITHUB, live:'https://crypto-llm.vercel.app/'},
+
+  // Page 2
+  {page:2, id:'riverflow', name:'Riverflow', sub:'Real-Time Data Streaming App',
+   img:'assets/Riverflow.jpeg',
+   desc:'A clean, modern interface for streaming and visualising real-time data flows. Built with a focus on responsive UI and smooth animations.',
+   tags:['React','Node.js','WebSockets','Tailwind'],
+   github:GITHUB, live:null},
+  {page:2, id:'teach', name:'TeachHub', sub:'Learning Platform',
+   img:'assets/teach.jpeg',
+   desc:'An interactive learning platform with course management, progress tracking, and a clean reader experience for students.',
+   tags:['Next.js','TypeScript','MongoDB','Tailwind'],
+   github:GITHUB, live:null},
+  {page:2, id:'vid', name:'VidStream', sub:'Video Streaming Experience',
+   img:'assets/Vid.jpeg',
+   desc:'Full-stack video streaming app with adaptive playback, custom controls, and a creator-friendly upload flow.',
+   tags:['React','Node.js','FFmpeg','AWS S3'],
+   github:GITHUB, live:'https://vidsnap-ai.onrender.com/'},
 ];
 
 const SKILLS = [
@@ -157,7 +208,13 @@ function Nav({s, set}) {
   const links = [{id:'about',l:'About'},{id:'proj',l:'Projects'},{id:'skills',l:'Skills'},{id:'exp',l:'Experience'},{id:'contact',l:'Contact'}];
   return (
     <nav className="nav">
-      <div className="nav-logo"><span style={{fontSize:20}}>🦔</span> Manik</div>
+      <div className="nav-logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{flexShrink:0}}>
+          <rect width="28" height="28" rx="6" fill="#1a1a1a"/>
+          <path d="M6 21V7L14 16.5L22 7V21" stroke="#f59e0b" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+        </svg>
+        <span><span style={{color:'#2563eb'}}>&lt;</span>Manik<span style={{color:'#2563eb'}}> /&gt;</span></span>
+      </div>
       <div className="nav-links">
         {links.map(({id,l}) => <button key={id} className={`nb${s===id?' on':''}`} onClick={()=>set(id)}>{l}</button>)}
       </div>
@@ -247,8 +304,8 @@ function FeatTabs({set}) {
   }, []);
   const TABS = [
     {l:'Open Source',
-     h:'15+ merged PRs. Real production impact.',
-     p:'Contributed to GreedyBear — a live threat intelligence platform. Improved database efficiency, fixed critical caching bugs, added rate-limiting, and cut CI test time by 95%.',
+     h:'I contribute. I learn. I give back.',
+     p:'Open source is where I grew the most. Reading real codebases, getting reviews from maintainers, and shipping code that actually runs in production — nothing beats it.',
      cta:'View my work on GitHub', ctaFn:()=>window.open(GITHUB,'_blank')},
     {l:'DSA',
      h:`${lc.solved} problems solved.`,
@@ -284,9 +341,6 @@ function Home({set}) {
     <div className="pad">
       <div style={{display:'flex',gap:28,alignItems:'flex-start',marginBottom:26}}>
         <div style={{flex:1}}>
-          <div style={{fontSize:11,fontWeight:700,color:'#2563eb',letterSpacing:'0.08em',marginBottom:9}}>
-            👋 OPEN TO OPPORTUNITIES
-          </div>
           <h1 style={{fontSize:30,fontWeight:800,letterSpacing:'-0.8px',lineHeight:1.1,marginBottom:13,color:'#1a1a1a'}}>
             <span style={{color:'#2563eb'}}>Data Science</span> student. <span style={{color:'#f59e0b'}}>Full-stack</span> builder.<br/>
             I build, ship and figure it out along the way.
@@ -327,7 +381,7 @@ function About() {
           <div className="ssub">Student. Builder. Open-source contributor.</div>
 
           <p style={{fontSize:14,lineHeight:1.75,color:'#444',marginBottom:26,maxWidth:560}}>
-            I'm Manik — a second-year Data Science student at IIIT Sonepat. I interned at LabelNest India, got into open source, and ended up with merged PRs in a production threat intelligence platform. I do hackathons when I can and have won some. I build freelance products for clients on the side. Grinding DSA and still going. Still building, still learning, still shipping 🚀
+            Hey! I'm Manik — a second-year Data Science student at IIIT Sonepat. I interned at LabelNest India, got into open source, and ended up with merged PRs in a production threat intelligence platform. I do hackathons when I can and have won some. I build freelance products for clients on the side. Grinding DSA and still going. Still building, still learning, still shipping 🚀
           </p>
 
           <div style={{fontSize:14,fontWeight:800,marginBottom:12}}>Education</div>
@@ -351,8 +405,8 @@ function About() {
 
           <div style={{fontSize:14,fontWeight:800,margin:'22px 0 12px'}}>Achievements</div>
           <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
-            {[['🏆','Best Web3 Build — AM Hacks 2.0 IGDTUW'],['🎯','Top 2.5% · JEE 2024 (1.4M+ candidates)'],['💻','500+ DSA problems solved'],['🔀','15,000+ DB queries optimised in prod']].map(([ic,t])=>(
-              <div key={t} className="badge"><span style={{fontSize:17}}>{ic}</span>{t}</div>
+            {['Best Web3 Build — AM Hacks 2.0 IGDTUW','Top 2.5% · JEE 2024 (1.4M+ candidates)','500+ DSA problems solved','Worked with 3 startups'].map(t=>(
+              <div key={t} className="badge">{t}</div>
             ))}
           </div>
         </div>
@@ -372,40 +426,51 @@ function About() {
 }
 
 function Projects() {
-  const [a, setA] = useState(0);
+  const [page, setPage] = useState(1);
+  const totalPages = Math.max(...PROJ.map(p => p.page));
+  const visible = PROJ.filter(p => p.page === page);
+  const Pager = () => (
+    <div style={{display:'flex',gap:8,justifyContent:'center',alignItems:'center',marginTop:16}}>
+      {Array.from({length:totalPages}, (_,i) => i+1).map(n => (
+        <button key={n} onClick={()=>setPage(n)} style={{
+          padding:'6px 14px',fontSize:12,fontWeight:700,cursor:'pointer',
+          background:n===page?'#2563eb':'#fff',color:n===page?'#fff':'#1a1a1a',
+          border:'1.5px solid #1a1a1a',borderRadius:4,
+          boxShadow:n===page?'2px 2px 0 #1a1a1a':'none',
+          fontFamily:'Space Grotesk,sans-serif',transition:'all .12s'
+        }}>Page {n}</button>
+      ))}
+    </div>
+  );
   return (
     <div className="pad">
-      <div className="stitle">Projects</div>
-      <div className="ssub">Things I've built and shipped.</div>
-
-      <div style={{display:'flex',gap:8,marginBottom:16,flexWrap:'wrap'}}>
-        {PROJ.map((p,i)=>(
-          <button key={p.id} onClick={()=>setA(i)} style={{
-            padding:'6px 14px',fontSize:12,fontWeight:600,cursor:'pointer',
-            background:i===a?'#2563eb':'#fff',color:i===a?'#fff':'#1a1a1a',
-            border:'1.5px solid #1a1a1a',borderRadius:4,
-            boxShadow:i===a?'2px 2px 0 #1a1a1a':'none',
-            fontFamily:'Space Grotesk,sans-serif',transition:'all .12s'
-          }}>{p.name}</button>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:20}}>
+        <div>
+          <div className="stitle" style={{marginBottom:5}}>Projects</div>
+          <div className="ssub" style={{marginBottom:0}}>Things I've built and shipped.</div>
+        </div>
+        <Pager/>
+      </div>
+      <div className="proj-grid">
+        {visible.map(p => (
+          <div key={p.id} className="proj-card">
+            <img src={p.img} alt={p.name} className="proj-img" loading="lazy"/>
+            <div className="proj-body">
+              <div className="proj-name">{p.name}</div>
+              <div className="proj-sub">{p.sub}</div>
+              <p className="proj-desc">{p.desc}</p>
+              <div className="proj-tags">
+                {p.tags.map(t => <span key={t} className="proj-tag">{t}</span>)}
+              </div>
+              <div className="proj-cta">
+                {p.live && <a href={p.live} target="_blank" rel="noreferrer" className="live">Live Site →</a>}
+                <a href={p.github} target="_blank" rel="noreferrer" className="gh">GitHub</a>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
-
-      {PROJ.map((p,i)=> i===a && (
-        <div key={p.id} style={{border:'2px solid #1a1a1a',borderRadius:8,padding:'22px',background:'#fff',boxShadow:'5px 5px 0 #1a1a1a'}}>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:12}}>
-            <div>
-              <h3 style={{fontSize:21,fontWeight:800,marginBottom:3}}>{p.name}</h3>
-              <p style={{fontSize:12,color:'#2563eb',fontWeight:600}}>{p.sub}</p>
-            </div>
-            <div style={{width:52,height:52,borderRadius:10,background:p.bg,border:'2px solid #1a1a1a',display:'flex',alignItems:'center',justifyContent:'center',fontSize:26,boxShadow:'2px 2px 0 #1a1a1a'}}>{p.em}</div>
-          </div>
-          <p style={{fontSize:13,color:'#555',lineHeight:1.65,marginBottom:16}}>{p.desc}</p>
-          <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:18}}>
-            {p.tags.map(t=><span key={t} className="tag">{t}</span>)}
-          </div>
-          <a href={GITHUB} target="_blank" rel="noreferrer" className="btn-a" style={{fontSize:12,padding:'8px 16px'}}>View on GitHub →</a>
-        </div>
-      ))}
+      <Pager/>
     </div>
   );
 }
@@ -546,9 +611,12 @@ function RightPanel({set}) {
 const FILES = {home:'home.mdx',about:'about.mdx',proj:'projects/index.mdx',skills:'skills.mdx',exp:'experience.mdx',contact:'contact.mdx'};
 
 function App() {
-  const [s, setS] = useState('home');
+  const validSections = ['home','about','proj','skills','exp','contact'];
+  const hashSection = window.location.hash.replace('#','');
+  const [s, setS] = useState(validSections.includes(hashSection) ? hashSection : 'home');
+  const set = (sec) => { setS(sec); window.location.hash = sec; };
   const content = {
-    home:<Home set={setS}/>,
+    home:<Home set={set}/>,
     about:<About/>,
     proj:<Projects/>,
     skills:<SkillsPage/>,
@@ -557,9 +625,9 @@ function App() {
   };
   return (
     <div style={{fontFamily:"'Space Grotesk',sans-serif",height:'100vh',display:'flex',flexDirection:'column'}}>
-      <Nav s={s} set={setS}/>
+      <Nav s={s} set={set}/>
       <div className="workspace">
-        <Sidebar s={s} set={setS}/>
+        <Sidebar s={s} set={set}/>
         <div className="ew">
           <div className="win">
             <WinBar title={FILES[s]}/>
