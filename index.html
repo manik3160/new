@@ -44,6 +44,21 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .nb.on{font-weight:700;background:rgba(37,99,235,.1);color:var(--blue)}
 .nav-cta{background:var(--amber);border:1.5px solid var(--ink);border-radius:4px;padding:6px 14px;font-size:13px;font-weight:700;font-family:'Space Grotesk',sans-serif;cursor:pointer;box-shadow:var(--shadow-sm);color:var(--ink);text-decoration:none;white-space:nowrap;transition:transform .1s,box-shadow .1s}
 .nav-cta:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+.nav-burger{display:none;width:36px;height:32px;border:1.5px solid var(--ink);border-radius:4px;background:#fff;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px;box-shadow:var(--shadow-sm);padding:0;flex-shrink:0}
+.nav-burger span{display:block;width:18px;height:2px;background:var(--ink);border-radius:1px;transition:transform .15s,opacity .15s}
+.nav-burger.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.nav-burger.open span:nth-child(2){opacity:0}
+.nav-burger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.mobile-drawer{display:none;position:fixed;top:48px;left:0;right:0;bottom:0;background:var(--sand);z-index:200;overflow-y:auto;padding:18px 16px 32px;border-top:var(--border)}
+.mobile-drawer.open{display:block;animation:fadeIn .18s ease-out}
+.md-sec-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.md-sec{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--ink);border-radius:6px;background:#fff;box-shadow:var(--shadow-sm);cursor:pointer;font-family:'Space Grotesk',sans-serif;text-align:left}
+.md-sec.on{background:rgba(37,99,235,.1)}
+.md-sec-ic{width:34px;height:34px;border-radius:6px;border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:1px 1px 0 var(--ink)}
+.md-sec-lbl{font-size:12px;font-weight:700;color:var(--ink)}
+.md-divider{height:1px;background:rgba(26,26,26,.15);margin:14px 0}
+.md-links{display:flex;flex-wrap:wrap;gap:8px}
+.md-link{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border:1.5px solid var(--ink);border-radius:6px;background:#fff;box-shadow:var(--shadow-sm);text-decoration:none;color:var(--ink);font-size:12px;font-weight:600}
 
 .workspace{display:flex;height:calc(100vh - 48px);overflow:hidden}
 
@@ -134,17 +149,29 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
 /* Mobile ≤640px */
 @media (max-width:640px){
   body{overflow-y:auto;height:auto}
-  .workspace{flex-direction:column;height:auto}
+  .workspace{flex-direction:column;height:auto;min-height:calc(100vh - 48px)}
   .sidebar,.rpanel{display:none}
-  .nav{padding:0 12px;gap:10px}
-  .nav-links{overflow-x:auto;gap:0}
+  .nav{padding:0 12px;gap:10px;justify-content:space-between}
+  .nav-logo{font-size:15px}
+  .nav-links{display:none}
+  .nav-burger{display:flex}
   .nav-cta{padding:5px 10px;font-size:12px}
   .ew{padding:8px}
   .win{box-shadow:3px 3px 0 var(--ink)}
   .pad{padding:18px 16px}
   .stitle{font-size:19px}
   .toolbar{display:none}
-  h1{font-size:22px !important}
+  h1{font-size:22px !important;line-height:1.18 !important}
+  .home-hero{flex-direction:column-reverse !important;gap:14px !important;align-items:flex-start !important;margin-bottom:18px !important}
+  .home-memoji > div{width:88px !important;height:88px !important;box-shadow:3px 3px 0 #f59e0b !important}
+  .about-grid{flex-direction:column !important;gap:18px !important}
+  .about-photo{width:100% !important;max-width:240px !important;position:static !important;align-self:center !important}
+  .contact-grid{grid-template-columns:1fr !important}
+  .stat{min-width:0;flex:1 1 calc(50% - 5px)}
+  .tabs-bar{overflow-x:auto;flex-wrap:nowrap}
+  .tab{white-space:nowrap;flex-shrink:0}
+  .proj-grid{grid-template-columns:1fr}
+  .win-title{margin-right:0;font-size:11px}
 }
 </style>
 </head>
@@ -289,20 +316,56 @@ const SKILLS = [
 
 function Nav({s, set}) {
   const links = [{id:'about',l:'About'},{id:'proj',l:'Projects'},{id:'skills',l:'Skills'},{id:'exp',l:'Experience'},{id:'contact',l:'Contact'}];
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
+  const pick = (id) => { set(id); setOpen(false); };
   return (
-    <nav className="nav">
-      <div className="nav-logo">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{flexShrink:0}}>
-          <rect width="28" height="28" rx="6" fill="#1a1a1a"/>
-          <path d="M6 21V7L14 16.5L22 7V21" stroke="#f59e0b" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-        </svg>
-        <span><span style={{color:'#2563eb'}}>&lt;</span>Manik<span style={{color:'#2563eb'}}> /&gt;</span></span>
+    <>
+      <nav className="nav">
+        <div className="nav-logo">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{flexShrink:0}}>
+            <rect width="28" height="28" rx="6" fill="#1a1a1a"/>
+            <path d="M6 21V7L14 16.5L22 7V21" stroke="#f59e0b" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          </svg>
+          <span><span style={{color:'#2563eb'}}>&lt;</span>Manik<span style={{color:'#2563eb'}}> /&gt;</span></span>
+        </div>
+        <div className="nav-links">
+          {links.map(({id,l}) => <button key={id} className={`nb${s===id?' on':''}`} onClick={()=>set(id)}>{l}</button>)}
+        </div>
+        <a href={`mailto:${EMAIL}`} className="nav-cta">Hire me →</a>
+        <button
+          className={`nav-burger${open?' open':''}`}
+          aria-label="Toggle menu"
+          aria-expanded={open}
+          onClick={()=>setOpen(o=>!o)}
+        >
+          <span/><span/><span/>
+        </button>
+      </nav>
+      <div className={`mobile-drawer${open?' open':''}`}>
+        <div style={{fontSize:11,fontWeight:700,letterSpacing:'0.08em',textTransform:'uppercase',color:'#888',marginBottom:10}}>Sections</div>
+        <div className="md-sec-grid">
+          {SECS.map(sec => (
+            <button key={sec.id} className={`md-sec${s===sec.id?' on':''}`} onClick={()=>pick(sec.id)}>
+              <div className="md-sec-ic" style={{background:sec.bg}}>{sec.em}</div>
+              <span className="md-sec-lbl">{sec.file}</span>
+            </button>
+          ))}
+        </div>
+        <div className="md-divider"/>
+        <div style={{fontSize:11,fontWeight:700,letterSpacing:'0.08em',textTransform:'uppercase',color:'#888',marginBottom:10}}>Links</div>
+        <div className="md-links">
+          <a href={GITHUB} target="_blank" rel="noreferrer" className="md-link" onClick={()=>setOpen(false)}>{Icon.github(16)} GitHub</a>
+          <a href={LINKEDIN} target="_blank" rel="noreferrer" className="md-link" onClick={()=>setOpen(false)}>{Icon.linkedin(16)} LinkedIn</a>
+          <a href={LEETCODE} target="_blank" rel="noreferrer" className="md-link" onClick={()=>setOpen(false)}>{Icon.leetcode(16)} LeetCode</a>
+          <a href={`mailto:${EMAIL}`} className="md-link" onClick={()=>setOpen(false)}>📧 Email</a>
+          <a href="https://drive.google.com/file/d/1S67rMrO1mPGnBL2YTUTfmqElumFKu_l7/view?usp=drive_link" target="_blank" rel="noreferrer" className="md-link" onClick={()=>setOpen(false)}>📄 Download CV</a>
+        </div>
       </div>
-      <div className="nav-links">
-        {links.map(({id,l}) => <button key={id} className={`nb${s===id?' on':''}`} onClick={()=>set(id)}>{l}</button>)}
-      </div>
-      <a href={`mailto:${EMAIL}`} className="nav-cta">Hire me →</a>
-    </nav>
+    </>
   );
 }
 
@@ -424,7 +487,7 @@ function FeatTabs({set}) {
 function Home({set}) {
   return (
     <div className="pad">
-      <div style={{display:'flex',gap:28,alignItems:'flex-start',marginBottom:26}}>
+      <div className="home-hero" style={{display:'flex',gap:28,alignItems:'flex-start',marginBottom:26}}>
         <div style={{flex:1}}>
           <h1 style={{fontSize:30,fontWeight:800,letterSpacing:'-0.8px',lineHeight:1.1,marginBottom:13,color:'#1a1a1a'}}>
             <span style={{color:'#2563eb'}}>Data Science</span> student. <span style={{color:'#f59e0b'}}>Full-stack</span> builder.<br/>
@@ -443,7 +506,7 @@ function Home({set}) {
             ))}
           </div>
         </div>
-        <div style={{flexShrink:0}}>
+        <div className="home-memoji" style={{flexShrink:0}}>
           <div style={{width:118,height:118,borderRadius:'50%',overflow:'hidden',border:'3px solid #1a1a1a',boxShadow:'4px 4px 0 #f59e0b',background:'#1a1a1a'}}>
             <img src="assets/memoji.png" alt="Manik" style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center top'}}/>
           </div>
@@ -460,7 +523,7 @@ function Home({set}) {
 function About() {
   return (
     <div className="pad">
-      <div style={{display:'flex',gap:28,alignItems:'flex-start'}}>
+      <div className="about-grid" style={{display:'flex',gap:28,alignItems:'flex-start'}}>
         <div style={{flex:1,minWidth:0}}>
           <div className="stitle">About me</div>
           <div className="ssub">Student. Builder. Open-source contributor.</div>
@@ -497,7 +560,7 @@ function About() {
         </div>
 
         {/* Photo card */}
-        <div style={{width:190,borderRadius:12,overflow:'hidden',border:'2px solid var(--ink)',boxShadow:'var(--shadow)',flexShrink:0,alignSelf:'flex-start',position:'sticky',top:0}}>
+        <div className="about-photo" style={{width:190,borderRadius:12,overflow:'hidden',border:'2px solid var(--ink)',boxShadow:'var(--shadow)',flexShrink:0,alignSelf:'flex-start',position:'sticky',top:0}}>
           <img src="assets/dp.png" alt="Manik" style={{width:'100%',display:'block',objectFit:'cover'}}/>
           <div style={{background:'linear-gradient(transparent,rgba(0,0,0,0.72))',marginTop:-60,padding:'60px 12px 14px'}}>
             <div style={{fontSize:11,color:'rgba(255,255,255,0.75)',marginBottom:2}}>New Delhi, India</div>
@@ -619,7 +682,7 @@ function Contact() {
       <p style={{fontSize:14,color:'#555',lineHeight:1.65,marginBottom:24,maxWidth:450}}>
         Open for internships, freelance builds, and interesting conversations. Reach me anywhere below.
       </p>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:12,maxWidth:500,marginBottom:22}}>
+      <div className="contact-grid" style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:12,maxWidth:500,marginBottom:22}}>
         {[
           {ic:'📧',l:'Email',v:EMAIL,h:`mailto:${EMAIL}`},
           {ic:Icon.github(24),l:'GitHub',v:'github.com/manik3160',h:GITHUB},
