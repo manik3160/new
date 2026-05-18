@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manik — Portfolio</title>
+<title>Manik's Portfolio</title>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
@@ -92,7 +92,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const {useState} = React;
+const {useState, useEffect} = React;
 
 const GITHUB = 'https://github.com/manik3160';
 const LINKEDIN = 'https://linkedin.com/in/manik';
@@ -192,6 +192,29 @@ function WinBar({title}) {
   );
 }
 
+function StatRow() {
+  const [prs, setPrs] = useState(null);
+  useEffect(() => {
+    fetch('https://api.github.com/search/issues?q=author:manik3160+type:pr+is:merged&per_page=1')
+      .then(r => r.json())
+      .then(d => setPrs(d.total_count))
+      .catch(() => setPrs(15));
+  }, []);
+  const stats = [
+    {n:'3', l:'Startups'},
+    {n:'1', l:'Hackathon Won'},
+    {n: prs != null ? prs + '+' : '…', l:'PRs Merged'},
+    {n:'Open Source', l:'Contributor'},
+  ];
+  return (
+    <div style={{display:'flex',gap:10,flexWrap:'wrap',marginBottom:26}}>
+      {stats.map(({n,l})=>(
+        <div key={l} className="stat"><div className="stat-n">{n}</div><div className="stat-l">{l}</div></div>
+      ))}
+    </div>
+  );
+}
+
 function Toolbar() {
   return (
     <div className="toolbar">
@@ -257,7 +280,7 @@ function Home({set}) {
             <span style={{color:'#2563eb'}}>ships</span> &amp; <span style={{color:'#f59e0b'}}>learns.</span>
           </h1>
           <p style={{fontSize:14,lineHeight:1.72,color:'#444',marginBottom:20,maxWidth:450}}>
-            Second-year Data Science student at IIIT Sonepat. Merged PRs in a production threat intelligence platform, won hackathons, ships freelance products. Still grinding DSA. Still building. Still shipping&nbsp;🚀
+            Second-year Data Science student at IIIT Sonepat. Interned at LabelNest India, contributes to open source, won hackathons, ships freelance products. Still grinding, Still building & Still shipping&nbsp;🚀
           </p>
           <div style={{display:'flex',gap:10,flexWrap:'wrap',marginBottom:16}}>
             <button className="btn-a" onClick={()=>set('proj')}>View Projects →</button>
@@ -276,11 +299,7 @@ function Home({set}) {
         </div>
       </div>
 
-      <div style={{display:'flex',gap:10,flexWrap:'wrap',marginBottom:26}}>
-        {[['9.49/10','SGPA'],['Top 2.5%','JEE 2024'],['500+','DSA Solved'],['15k+','Queries Fixed'],['5 PRs','Merged']].map(([n,l])=>(
-          <div key={l} className="stat"><div className="stat-n">{n}</div><div className="stat-l">{l}</div></div>
-        ))}
-      </div>
+      <StatRow/>
 
       <FeatTabs set={set}/>
     </div>
@@ -397,7 +416,7 @@ function Exp() {
          pts:['Annotated & validated datasets for enterprise clients (Infosys) via internal QA pipelines.','Managed tasks on AnnoNest platform — enabled 20% faster service delivery.','Drove 30% reduction in rework and errors under tight timelines.']},
         {co:'GreedyBear (Open Source)', role:'Contributor',
          date:'Ongoing', loc:'Remote', chipBg:'#fef3c7',
-         pts:['Eliminated 15,000+ N+1 queries/run via Django ORM bulk prefetching (PR #1020, #1118).','Rate-limited public APIs & fixed critical caching bugs in enrichment flows (PR #927, #1132).','Cut CI test time 95% — from 15s to <400ms — refactoring React + Vitest state (PR #1151).']},
+         pts:['Contributed 15+ merged PRs across security, performance, and feature development.','Improved API reliability, database efficiency, and backend infrastructure.','Collaborated with maintainers through code reviews on a production threat intelligence platform.']},
       ].map(e=>(
         <div key={e.co} className="card">
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:6}}>
