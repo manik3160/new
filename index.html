@@ -3,7 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manik's Portfolio</title>
+<title>Manik — Data Science Student & Full-stack Builder</title>
+<meta name="description" content="Manik — Data Science student at IIIT Sonepat. Full-stack builder shipping open source, freelance, and hackathon-winning products.">
+<meta name="theme-color" content="#f3ede0">
+<meta name="author" content="Manik Rajput">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><rect width='28' height='28' rx='6' fill='%231a1a1a'/><path d='M6 21V7L14 16.5L22 7V21' stroke='%23f59e0b' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Manik — Data Science Student & Full-stack Builder">
+<meta property="og:description" content="Second-year Data Science student at IIIT Sonepat. Open source contributor, hackathon winner, freelance builder.">
+<meta property="og:image" content="assets/dp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Manik — Data Science Student & Full-stack Builder">
+<meta name="twitter:description" content="Second-year Data Science student at IIIT Sonepat. Open source contributor, hackathon winner, freelance builder.">
+<meta name="twitter:image" content="assets/dp.png">
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
@@ -103,6 +115,37 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .rp-ic{width:44px;height:44px;border:2px solid var(--ink);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#fff;box-shadow:var(--shadow-sm)}
 .rp-lbl{font-size:10px;font-weight:600;color:var(--ink);text-align:center}
 .rp-div{height:1px;background:rgba(26,26,26,.14);margin:3px 0}
+
+/* Section transition */
+.scr-content{animation:fadeIn .22s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* Keyboard focus rings */
+button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+
+/* Tablet ≤1024px */
+@media (max-width:1024px){
+  .sidebar{width:78px}
+  .sb-lbl{font-size:8.5px}
+  .rpanel{width:120px}
+  .proj-grid{grid-template-columns:1fr}
+}
+
+/* Mobile ≤640px */
+@media (max-width:640px){
+  body{overflow-y:auto;height:auto}
+  .workspace{flex-direction:column;height:auto}
+  .sidebar,.rpanel{display:none}
+  .nav{padding:0 12px;gap:10px}
+  .nav-links{overflow-x:auto;gap:0}
+  .nav-cta{padding:5px 10px;font-size:12px}
+  .ew{padding:8px}
+  .win{box-shadow:3px 3px 0 var(--ink)}
+  .pad{padding:18px 16px}
+  .stitle{font-size:19px}
+  .toolbar{display:none}
+  h1{font-size:22px !important}
+}
 </style>
 </head>
 <body>
@@ -134,13 +177,20 @@ const Icon = {
       <path d="M11.4 18.92a3.5 3.5 0 0 1 0-4.95l1.07-1.07a1.5 1.5 0 0 1 2.13 2.13l-1.08 1.06a.5.5 0 0 0 0 .71l.01.01a1.5 1.5 0 0 1-2.13 2.11z" fill="#000"/>
     </svg>
   ),
+  skills: (s=16) => (
+    <svg width={s} height={s} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5.5 7.5L2 10l3.5 2.5" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M14.5 7.5L18 10l-3.5 2.5" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M12 4l-4 12" stroke="#fff" strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  ),
 };
 
 const SECS = [
   {id:'home',   file:'home.mdx',        bg:'#f59e0b', em:'🏠'},
   {id:'about',  file:'about.mdx',       bg:'#2563eb', em:'👤'},
   {id:'proj',   file:'projects/',       bg:'#7c3aed', em:'📁'},
-  {id:'skills', file:'skills.mdx',      bg:'#16a34a', em:'⚡'},
+  {id:'skills', file:'skills.mdx',      bg:'#16a34a', em:Icon.skills(15)},
   {id:'exp',    file:'experience.mdx',  bg:'#dc2626', em:'💼'},
   {id:'contact',file:'contact.mdx',     bg:'#0891b2', em:'✉️'},
 ];
@@ -361,8 +411,8 @@ function Home({set}) {
           </div>
         </div>
         <div style={{flexShrink:0}}>
-          <div style={{width:118,height:118,borderRadius:'50%',overflow:'hidden',border:'3px solid #1a1a1a',boxShadow:'4px 4px 0 #1a1a1a',background:'#e5e0d5'}}>
-            <img src="assets/dp.png" alt="Manik" style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+          <div style={{width:118,height:118,borderRadius:'50%',overflow:'hidden',border:'3px solid #1a1a1a',boxShadow:'4px 4px 0 #f59e0b',background:'#1a1a1a'}}>
+            <img src="assets/memoji.png" alt="Manik" style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center top'}}/>
           </div>
         </div>
       </div>
@@ -456,7 +506,7 @@ function Projects() {
       <div className="proj-grid">
         {visible.map(p => (
           <div key={p.id} className="proj-card">
-            <img src={p.img} alt={p.name} className="proj-img" loading="lazy"/>
+            <img src={p.img} alt={p.name} className="proj-img" loading="lazy" onError={e=>{e.target.style.display='none'}}/>
             <div className="proj-body">
               <div className="proj-name">{p.name}</div>
               <div className="proj-sub">{p.sub}</div>
@@ -634,10 +684,13 @@ function App() {
           <div className="win">
             <WinBar title={FILES[s]}/>
             <Toolbar/>
-            <div className="scr">{content[s]}</div>
+            <div className="scr"><div className="scr-content" key={s}>{content[s]}</div></div>
+            <footer style={{textAlign:'center',padding:'10px 14px',fontSize:11,color:'#888',borderTop:'1px solid rgba(0,0,0,0.06)',background:'#faf9f6',flexShrink:0}}>
+              © 2026 Manik · Built with <span style={{color:'#f59e0b'}}>♥</span> · <a href="https://github.com/manik3160/new" target="_blank" rel="noreferrer" style={{color:'#555',borderBottom:'1px dotted #aaa',textDecoration:'none'}}>Source</a>
+            </footer>
           </div>
         </div>
-        <RightPanel set={setS}/>
+        <RightPanel set={set}/>
       </div>
     </div>
   );
