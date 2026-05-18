@@ -238,30 +238,42 @@ function Toolbar() {
 
 function FeatTabs({set}) {
   const [t, setT] = useState(0);
+  const [lc, setLc] = useState({solved:'…', ranking:'…'});
+  useEffect(() => {
+    fetch('https://leetcode-stats-api.herokuapp.com/manik3160')
+      .then(r => r.json())
+      .then(d => setLc({solved: d.totalSolved ?? '500+', ranking: d.ranking ? '1600+' + d.ranking.toLocaleString() : '—'}))
+      .catch(() => setLc({solved:'500+', ranking:'—'}));
+  }, []);
   const TABS = [
-    {l:'Open Source', ic:'🔀', h:'Merged 5 PRs in production',
-     p:'Eliminated 15,000+ N+1 queries on GreedyBear, cut CI test time 95%, fixed critical caching bugs, and added rate-limiting to public APIs.'},
-    {l:'AI Projects', ic:'🤖', h:'Building agentic systems',
-     p:'NeverDown: a 5-agent autonomous incident response pipeline. X-Pand: geospatial ML with SHAP explainability at low latency.'},
-    {l:'Hackathons',  ic:'🏆', h:'Won Best Web3 Build',
-     p:'AM Hacks 2.0 at IGDTUW. Multiple national hackathons — shipped complete products in 24–48 hours under pressure.'},
-    {l:'Freelance',   ic:'🚀', h:'Real products, real clients',
-     p:'End-to-end web products for clients using React, Next.js, and Node — wireframe through deployment.'},
+    {l:'Open Source',
+     h:'15+ merged PRs. Real production impact.',
+     p:'Contributed to GreedyBear — a live threat intelligence platform. Improved database efficiency, fixed critical caching bugs, added rate-limiting, and cut CI test time by 95%.',
+     cta:'View my work on GitHub', ctaFn:()=>window.open(GITHUB,'_blank')},
+    {l:'DSA',
+     h:`${lc.solved} problems solved.`,
+     p:`Rated 1600+ on LeetCode. Covers arrays, graphs, DP, trees, and system design. Consistent and still going.`,
+     cta:'View on LeetCode', ctaFn:()=>window.open(LEETCODE,'_blank')},
+    {l:'Hackathons',
+     h:'5+ finalist. 1 winner.',
+     p:'Won Best Web3 Build at AM Hacks 2.0 (IGDTUW). Reached finals in 5+ national hackathons — shipped complete products from zero in 24–48 hours under pressure.',
+     cta:'See Hackathon Builds', ctaFn:()=>set('proj')},
+    {l:'Freelance',
+     h:'Clients paid. Products shipped.',
+     p:'End-to-end web products for real clients — wireframe through deployment. React, Next.js, and Node.js.',
+     cta:'See Freelance Work', ctaFn:()=>set('proj')},
   ];
   return (
     <div>
       <div className="tabs-bar">
         {TABS.map((tb,i) => <button key={i} className={`tab${t===i?' on':''}`} onClick={()=>setT(i)}>{tb.l}</button>)}
       </div>
-      <div className="tab-pnl" style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:16}}>
-        <div style={{flex:1}}>
-          <div style={{fontWeight:800,fontSize:15,marginBottom:6}}>{TABS[t].h}</div>
-          <p style={{fontSize:13,color:'#555',lineHeight:1.65,maxWidth:400}}>{TABS[t].p}</p>
-          <button className="btn-w" style={{marginTop:12,padding:'6px 14px',fontSize:12}} onClick={()=>set('proj')}>
-            See all projects →
-          </button>
-        </div>
-        <div style={{fontSize:48,flexShrink:0}}>{TABS[t].ic}</div>
+      <div className="tab-pnl">
+        <div style={{fontWeight:800,fontSize:15,marginBottom:6}}>{TABS[t].h}</div>
+        <p style={{fontSize:13,color:'#555',lineHeight:1.65,maxWidth:440}}>{TABS[t].p}</p>
+        <button className="btn-w" style={{marginTop:12,padding:'6px 14px',fontSize:12}} onClick={TABS[t].ctaFn}>
+          {TABS[t].cta} →
+        </button>
       </div>
     </div>
   );
