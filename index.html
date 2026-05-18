@@ -95,8 +95,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 const {useState, useEffect} = React;
 
 const GITHUB = 'https://github.com/manik3160';
-const LINKEDIN = 'https://linkedin.com/in/manik';
-const LEETCODE = 'https://leetcode.com/manik';
+const LINKEDIN = 'https://www.linkedin.com/in/manik-rajput-2916412b2/';
+const LEETCODE = 'https://leetcode.com/u/manik3160/';
 const EMAIL = 'maniksingh3606@gmail.com';
 
 const Icon = {
@@ -231,7 +231,7 @@ function Toolbar() {
       <button className="tb">≡</button>
       <button className="tb">⋮</button>
       <button className="tb">🔗</button>
-      <a href="#" title="CV coming soon" className="tb-dl">Download CV</a>
+      <a href="https://drive.google.com/file/d/1S67rMrO1mPGnBL2YTUTfmqElumFKu_l7/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="tb-dl">Download CV</a>
     </div>
   );
 }
@@ -276,8 +276,8 @@ function Home({set}) {
             👋 OPEN TO OPPORTUNITIES
           </div>
           <h1 style={{fontSize:30,fontWeight:800,letterSpacing:'-0.8px',lineHeight:1.1,marginBottom:13,color:'#1a1a1a'}}>
-            The builder who<br/>
-            <span style={{color:'#2563eb'}}>ships</span> &amp; <span style={{color:'#f59e0b'}}>learns.</span>
+            <span style={{color:'#2563eb'}}>Data Science</span> student. <span style={{color:'#f59e0b'}}>Full-stack</span> builder.<br/>
+            I build, ship and figure it out along the way.
           </h1>
           <p style={{fontSize:14,lineHeight:1.72,color:'#444',marginBottom:20,maxWidth:450}}>
             Second-year Data Science student at IIIT Sonepat. Interned at LabelNest India, contributes to open source, won hackathons, ships freelance products. Still grinding, Still building & Still shipping&nbsp;🚀
@@ -498,7 +498,7 @@ function RightPanel({set}) {
     {ic:Icon.leetcode(24), l:'LeetCode',     h:LEETCODE},
     {ic:'📧', l:'Email Me',     h:`mailto:${EMAIL}`},
     {ic:'🏆', l:'Achievements', h:null, fn:()=>set('about')},
-    {ic:'📄', l:'Download CV',  h:'#', title:'CV coming soon'},
+    {ic:'📄', l:'Download CV',  h:'https://drive.google.com/file/d/1S67rMrO1mPGnBL2YTUTfmqElumFKu_l7/view?usp=drive_link'},
   ];
   return (
     <aside className="rpanel">
