@@ -251,17 +251,19 @@ function WinBar({title}) {
 
 function StatRow() {
   const [prs, setPrs] = useState(null);
+  const [dsa, setDsa] = useState(null);
   useEffect(() => {
     fetch('https://api.github.com/search/issues?q=author:manik3160+type:pr+is:merged&per_page=1')
-      .then(r => r.json())
-      .then(d => setPrs(d.total_count))
-      .catch(() => setPrs(15));
+      .then(r => r.json()).then(d => setPrs(d.total_count)).catch(() => setPrs(15));
+    fetch('https://leetcode-stats-api.herokuapp.com/manik3160')
+      .then(r => r.json()).then(d => setDsa(d.totalSolved ?? '500+')).catch(() => setDsa('500+'));
   }, []);
   const stats = [
-    {n:'3', l:'Startups'},
-    {n:'1', l:'Hackathon Won'},
-    {n: prs != null ? prs + '+' : '…', l:'PRs Merged'},
-    {n:'Open Source', l:'Contributor'},
+    {n:'3',                                  l:'Startups'},
+    {n:'1',                                  l:'Hackathon Won'},
+    {n: prs != null ? prs + '+' : '…',      l:'PRs Merged'},
+    {n:'9.49',                               l:'SGPA'},
+    {n: dsa != null ? dsa + '' : '…',      l:'DSA Solved'},
   ];
   return (
     <div style={{display:'flex',gap:10,flexWrap:'wrap',marginBottom:26}}>
