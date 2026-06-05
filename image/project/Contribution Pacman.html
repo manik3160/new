@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contribution Pac-Man — manik3160</title>
+<style>
+  :root{
+    --cream:#f4efe3;
+    --paper:#ffffff;
+    --ink:#15110b;
+
+    --l0:#e9e3d4;   /* empty (warm) */
+    --l1:#cfe9b8;
+    --l2:#93cf6b;
+    --l3:#4ea54a;
+    --l4:#2b7a32;   /* deep jungle */
+
+    --pac:#f4b41a;  /* warm yellow, nods to portfolio orange */
+
+    --cell:8px;
+    --gap:2px;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; }
+  body{
+    background:var(--cream);
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .card{
+    background:var(--paper);
+    border:1.5px solid var(--ink);
+    border-radius:16px;
+    padding:18px 18px 16px;
+    box-shadow:0 14px 34px -22px rgba(0,0,0,.45);
+    transition:border-color .25s ease, box-shadow .25s ease, background .25s ease, padding .25s ease;
+  }
+  .card.soft{ border:1px solid rgba(21,17,11,.10); box-shadow:0 26px 60px -30px rgba(0,0,0,.55); }
+  .card.none{ border:none; background:transparent; box-shadow:none; padding:6px; }
+
+  .stage{ position:relative; }
+  .grid{ display:flex; gap:var(--gap); }
+  .col{ display:flex; flex-direction:column; gap:var(--gap); }
+  .cell{
+    width:var(--cell); height:var(--cell); border-radius:2px;
+    background:var(--l0);
+    transition:opacity .32s ease, transform .32s cubic-bezier(.2,1.5,.4,1), background .25s ease;
+  }
+  .cell.pad{ visibility:hidden; }
+  .cell.l1{ background:var(--l1); }
+  .cell.l2{ background:var(--l2); }
+  .cell.l3{ background:var(--l3); }
+  .cell.l4{ background:var(--l4); }
+  .cell.eaten{ opacity:0; transform:scale(.1); }
+
+  canvas.fx{ position:absolute; pointer-events:none; z-index:3; }
+
+  .tip{
+    position:fixed; z-index:50; pointer-events:none; opacity:0;
+    transform:translate(-50%,-100%) translateY(-9px);
+    background:var(--paper); border:1.5px solid var(--ink);
+    padding:5px 9px; border-radius:8px; font-size:12px; color:var(--ink);
+    box-shadow:0 10px 24px -14px rgba(0,0,0,.5); white-space:nowrap; font-weight:600;
+    transition:opacity .12s ease;
+  }
+  .tip b{ color:var(--l3); }
+  .tip::after{
+    content:""; position:absolute; left:50%; bottom:-5px; width:8px; height:8px;
+    background:var(--paper); border-right:1.5px solid var(--ink); border-bottom:1.5px solid var(--ink);
+    transform:translateX(-50%) rotate(45deg);
+  }
+</style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="stage" id="stage">
+      <div class="grid" id="grid"></div>
+      <canvas class="fx" id="fx"></canvas>
+    </div>
+  </div>
+  <div class="tip" id="tip"></div>
+
+<script>
+(function(){
+  "use strict";
+  const USER="manik3160";
+  let CELL=8, GAP=2, PITCH=10;
+  const ROWS=7, PAD=10;
+
+  const gridEl=document.getElementById("grid");
+  const fx=document.getElementById("fx");
+  const tip=document.getElementById("tip");
+  const cardEl=document.getElementById("card");
+  const ctx=fx.getContext("2d");
+
+  // ---------- data ----------
+  function levelFromCount(c){ if(c<=0)return 0; if(c<=2)return 1; if(c<=5)return 2; if(c<=9)return 3; return 4; }
+  function fallbackDays(){
+    const out=[]; const today=new Date(); today.setHours(0,0,0,0);
+    for(let i=370;i>=0;i--){
+      const d=new Date(today); d.setDate(today.getDate()-i);
+      const wd=d.getDay();
+      let base=(wd===0||wd===6)?0.25:0.7;
+      let c=Math.random()<base?Math.floor(Math.pow(Math.random(),1.7)*13):0;
+      if(Math.random()<0.03) c+=Math.floor(Math.random()*14);
+      out.push({date:d.toISOString().slice(0,10),count:c,level:levelFromCount(c)});
+    }
+    return out;
+  }
+  async function loadDays(){
+    try{
+      const r=await fetch(`https://github-contributions-api.jogruber.de/v4/${USER}?y=last`,{cache:"no-store"});
+      if(!r.ok) throw 0;
+      const j=await r.json();
+      if(!j.contributions||!j.contributions.length) throw 0;
+      return j.contributions.map(c=>({date:c.date,count:c.count,level:c.level}));
+    }catch(e){ return fallbackDays(); }
+  }
+
+  // ---------- columns ----------
+  function buildColumns(days){
+    days=days.slice().sort((a,b)=>a.date<b.date?-1:1);
+    const cols=[]; let col=new Array(ROWS).fill(null);
+    days.forEach((d,i)=>{
+      const wd=new Date(d.date+"T00:00:00").getDay();
+      if(i===0){ for(let r=0;r<wd;r++) col[r]={pad:true}; }
+      col[wd]=d;
+      if(wd===6){ cols.push(col); col=new Array(ROWS).fill(null); }
+    });
+    if(col.some(x=>x!==null)) cols.push(col);
+    return cols.slice(-53);
+  }
+
+  let COLS=[], colEls=[], gridW=0, gridH=0, DAYS=[];
+
+  function render(days){
+    COLS=buildColumns(days); gridEl.innerHTML=""; colEls=[];
+    COLS.forEach(col=>{
+      const cd=document.createElement("div"); cd.className="col"; const cells=[];
+      for(let r=0;r<ROWS;r++){
+        const c=document.createElement("div"); const data=col[r];
+        if(!data||data.pad){ c.className="cell pad"; }
+        else{
+          c.className="cell l"+(data.level!=null?data.level:levelFromCount(data.count));
+          c.dataset.count=data.count; c.dataset.date=data.date;
+          c.addEventListener("mouseenter",showTip);
+          c.addEventListener("mousemove",moveTip);
+          c.addEventListener("mouseleave",hideTip);
+        }
+        cd.appendChild(c); cells.push(c);
+      }
+      gridEl.appendChild(cd); colEls.push(cells);
+    });
+    gridW=COLS.length*PITCH-GAP; gridH=ROWS*PITCH-GAP;
+    sizeCanvas(); buildPath();
+    lastIdx=-1; // resync eater after a re-render
+  }
+
+  // ---------- tooltip ----------
+  function fmtDate(iso){ return new Date(iso+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }
+  function showTip(e){ const t=e.currentTarget,n=+t.dataset.count;
+    tip.innerHTML=`<b>${n}</b> contribution${n===1?"":"s"} · ${fmtDate(t.dataset.date)}`;
+    tip.style.opacity="1"; moveTip(e);
+  }
+  function moveTip(e){ tip.style.left=e.clientX+"px"; tip.style.top=(e.clientY-10)+"px"; }
+  function hideTip(){ tip.style.opacity="0"; }
+
+  // ---------- canvas ----------
+  let DPR=Math.min(window.devicePixelRatio||1,2);
+  function sizeCanvas(){
+    const w=gridW+PAD*2, h=gridH+PAD*2;
+    fx.style.left=-PAD+"px"; fx.style.top=-PAD+"px";
+    fx.style.width=w+"px"; fx.style.height=h+"px";
+    fx.width=w*DPR; fx.height=h*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+
+  // ---------- serpentine path ----------
+  let path=[];
+  function buildPath(){
+    path=[];
+    for(let r=0;r<ROWS;r++){
+      if(r%2===0){ for(let ci=0;ci<COLS.length;ci++) path.push({ci,r}); }
+      else { for(let ci=COLS.length-1;ci>=0;ci--) path.push({ci,r}); }
+    }
+  }
+  function center(p){ return { x:PAD + p.ci*PITCH + CELL/2, y:PAD + p.r*PITCH + CELL/2 }; }
+  function posAt(tt){
+    if(!path.length) return {x:0,y:0,dx:1,dy:0};
+    const i0=Math.max(0,Math.min(Math.floor(tt),path.length-1));
+    const i1=Math.min(i0+1,path.length-1);
+    const f=Math.max(0,Math.min(tt-i0,1));
+    const a=center(path[i0]), b=center(path[i1]);
+    let dx=b.x-a.x, dy=b.y-a.y; if(i0===i1){ dx=1; dy=0; }
+    return { x:a.x+(b.x-a.x)*f, y:a.y+(b.y-a.y)*f, dx, dy };
+  }
+  function eat(p){ const el=colEls[p.ci] && colEls[p.ci][p.r]; if(el && !el.classList.contains("pad")) el.classList.add("eaten"); }
+  function regrowCol(ci){ if(colEls[ci]) colEls[ci].forEach(c=>c.classList.remove("eaten")); }
+
+  // ---------- sprites ----------
+  function cssVar(n,fb){ const v=getComputedStyle(document.documentElement).getPropertyValue(n).trim(); return v||fb; }
+  function drawPac(x,y,angle,chomp){
+    const R=PITCH*0.82;
+    ctx.save(); ctx.translate(x,y); ctx.rotate(angle);
+    const mouth=(0.06+0.30*Math.abs(Math.sin(chomp)))*Math.PI;
+    ctx.fillStyle=cssVar("--pac","#f4b41a");
+    ctx.beginPath(); ctx.moveTo(0,0);
+    ctx.arc(0,0,R,mouth,Math.PI*2-mouth); ctx.closePath(); ctx.fill();
+    ctx.fillStyle="#15110b";
+    ctx.beginPath(); ctx.arc(R*0.12,-R*0.46,R*0.13,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+  const GHOST_COLORS=["#ef4d3a","#46c7e0","#f6a5cb","#f0913a"];
+  const GHOST_GAP=3; // cells of spacing in the trail
+  function drawGhost(x,y,color,dx,dy){
+    const R=PITCH*0.78, cy=-R*0.05;
+    ctx.save(); ctx.translate(x,y);
+    ctx.fillStyle=color;
+    ctx.beginPath();
+    ctx.arc(0,cy,R,Math.PI,Math.PI*2);          // top dome
+    ctx.lineTo(R,cy+R*0.82);
+    const feet=4, w=2*R/feet;
+    for(let i=0;i<feet;i++){
+      const xr=R-i*w;
+      ctx.lineTo(xr-w*0.5, cy+R*0.58);
+      ctx.lineTo(xr-w, cy+R*0.82);
+    }
+    ctx.closePath(); ctx.fill();
+    // eyes looking toward travel direction
+    const dl=Math.hypot(dx,dy)||1, lx=dx/dl, ly=dy/dl;
+    const ex=R*0.36, ey=cy, er=R*0.30;
+    ctx.fillStyle="#ffffff";
+    ctx.beginPath(); ctx.arc(-ex,ey,er,0,Math.PI*2); ctx.arc(ex,ey,er,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#1a2b4a";
+    ctx.beginPath();
+    ctx.arc(-ex+lx*er*0.5, ey+ly*er*0.5, er*0.5,0,Math.PI*2);
+    ctx.arc( ex+lx*er*0.5, ey+ly*er*0.5, er*0.5,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // ---------- loop ----------
+  let t=0,state="eat",stateT=0,lastIdx=-1,rg=0,chomp=0,prev=0,started=false;
+  function frame(now){
+    if(!prev) prev=now;
+    let dt=(now-prev)/1000; prev=now; if(dt>0.05) dt=0.05;
+    chomp+=dt*15;
+    const SPEED=(window.CG&&window.CG.cfg.speed)||26;
+    const GH=(window.CG&&window.CG.cfg.ghosts)||0;
+
+    if(state==="eat"){
+      t+=SPEED*dt;
+      const idx=Math.min(Math.floor(t), path.length-1);
+      while(lastIdx<idx){ lastIdx++; eat(path[lastIdx]); }
+      if(t>=path.length-1){ state="regrow"; stateT=0; rg=0; }
+    } else if(state==="regrow"){
+      stateT+=dt;
+      const tgt=Math.floor(stateT/0.012);
+      while(rg<=tgt && rg<COLS.length){ regrowCol(rg); rg++; }
+      if(rg>=COLS.length && stateT>COLS.length*0.012+0.55){ state="eat"; t=0; lastIdx=-1; }
+    }
+
+    ctx.clearRect(0,0,gridW+PAD*2,gridH+PAD*2);
+    if(state==="eat" && path.length){
+      for(let i=GH;i>=1;i--){
+        const gtt=t - i*GHOST_GAP;
+        if(gtt<0) continue;
+        const g=posAt(gtt);
+        drawGhost(g.x,g.y,GHOST_COLORS[(i-1)%4],g.dx,g.dy);
+      }
+      const p=posAt(t);
+      drawPac(p.x,p.y, Math.atan2(p.dy,p.dx), chomp);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- config bridge (driven by Tweaks panel) ----------
+  const SIZE_MAP={ S:[6,2], M:[8,2], L:[11,3] };
+  window.CG={
+    cfg:{ speed:26, ghosts:3 },
+    setSpeed(v){ this.cfg.speed=+v||26; },
+    setGhosts(v){ this.cfg.ghosts=Math.max(0,Math.min(4, Math.round(+v||0))); },
+    setPalette(arr){ if(!Array.isArray(arr)) return; const names=["--l1","--l2","--l3","--l4"];
+      arr.slice(0,4).forEach((c,i)=>document.documentElement.style.setProperty(names[i],c)); },
+    setPac(c){ if(c) document.documentElement.style.setProperty("--pac",c); },
+    setSize(key){ const s=SIZE_MAP[key]||SIZE_MAP.M; CELL=s[0]; GAP=s[1]; PITCH=CELL+GAP;
+      document.documentElement.style.setProperty("--cell",CELL+"px");
+      document.documentElement.style.setProperty("--gap",GAP+"px");
+      if(DAYS.length){ render(DAYS); } },
+    setCard(mode){ cardEl.className="card"+(mode==="Soft"?" soft":mode==="None"?" none":""); }
+  };
+
+  // ---------- boot ----------
+  (async function(){
+    DAYS=await loadDays();
+    render(DAYS);
+    if(!started){ started=true; requestAnimationFrame(frame); }
+  })();
+  window.addEventListener("resize",()=>{ const d=Math.min(window.devicePixelRatio||1,2); if(d!==DPR){ DPR=d; sizeCanvas(); } });
+})();
+</script>
+
+<!-- ===== Tweaks panel (React island) ===== -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel">
+  const { useTweaks, TweaksPanel, TweakSection, TweakSlider, TweakColor, TweakRadio } = window;
+
+  const PAL_JUNGLE = ["#cfe9b8","#93cf6b","#4ea54a","#2b7a32"];
+  const PAL_GITHUB = ["#9be9a8","#40c463","#30a14e","#216e39"];
+  const PAL_SUNSET = ["#ffd9a0","#ffb15c","#f97c3c","#d94f1e"];
+  const PAL_OCEAN  = ["#bfe3f0","#7cc7e0","#3f9fd0","#1f6fa8"];
+  const PAL_GRAPE  = ["#e0cdf0","#b893e0","#8a5fd0","#5f37a8"];
+
+  function PacTweaks(){
+    const [t, setTweak] = useTweaks({
+      ghosts: 3,
+      speed: 26,
+      squares: PAL_JUNGLE,
+      pac: "#f4b41a",
+      size: "M",
+      card: "Bordered"
+    });
+
+    React.useEffect(()=>{
+      const g = window.CG; if(!g) return;
+      g.setGhosts(t.ghosts);
+      g.setSpeed(t.speed);
+      g.setPalette(t.squares);
+      g.setPac(t.pac);
+      g.setSize(t.size);
+      g.setCard(t.card);
+    }, [t]);
+
+    return (
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Characters" />
+        <TweakSlider label="Ghosts" value={t.ghosts} min={0} max={4} step={1}
+                     onChange={(v)=>setTweak('ghosts', v)} />
+        <TweakSlider label="Speed" value={t.speed} min={12} max={44} step={2} unit=" c/s"
+                     onChange={(v)=>setTweak('speed', v)} />
+
+        <TweakSection label="Color" />
+        <TweakColor label="Squares" value={t.squares}
+                    options={[PAL_JUNGLE, PAL_GITHUB, PAL_SUNSET, PAL_OCEAN, PAL_GRAPE]}
+                    onChange={(v)=>setTweak('squares', v)} />
+        <TweakColor label="Pac-Man" value={t.pac}
+                    options={["#f4b41a","#ffce3a","#f59021","#ffd84d"]}
+                    onChange={(v)=>setTweak('pac', v)} />
+
+        <TweakSection label="Layout" />
+        <TweakRadio label="Square size" value={t.size} options={["S","M","L"]}
+                    onChange={(v)=>setTweak('size', v)} />
+        <TweakRadio label="Card" value={t.card} options={["Bordered","Soft","None"]}
+                    onChange={(v)=>setTweak('card', v)} />
+      </TweaksPanel>
+    );
+  }
+
+  const mount = document.createElement("div");
+  document.body.appendChild(mount);
+  ReactDOM.createRoot(mount).render(<PacTweaks />);
+</script>
+</body>
+</html>
