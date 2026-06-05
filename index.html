@@ -505,6 +505,76 @@ function HeroGif() {
   );
 }
 
+function ContribPacman() {
+  const stageRef = React.useRef(null);
+  React.useEffect(function() {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const gridEl = stage.querySelector('.cg-grid');
+    const fx = stage.querySelector('canvas');
+    if (!gridEl || !fx) return;
+    const ctx = fx.getContext('2d');
+    const USER='manik3160', CELL=10, GAP=2, PITCH=12, ROWS=7, PAD=6, WEEKS=26;
+
+    let tip = document.querySelector('.cg-tip');
+    if (!tip) {
+      tip = document.createElement('div'); tip.className='cg-tip';
+      tip.style.cssText='position:fixed;z-index:9999;pointer-events:none;opacity:0;transform:translate(-50%,-100%) translateY(-9px);background:#fff;border:1.5px solid #1a1a1a;padding:5px 9px;border-radius:8px;font-size:11px;color:#1a1a1a;box-shadow:2px 2px 0 #1a1a1a;white-space:nowrap;font-weight:600;font-family:Space Grotesk,sans-serif;transition:opacity .12s';
+      document.body.appendChild(tip);
+    }
+    function lvl(c){ return c<=0?0:c<=2?1:c<=5?2:c<=9?3:4; }
+    function fallback(){ const out=[],today=new Date(); today.setHours(0,0,0,0); for(let i=WEEKS*7;i>=0;i--){ const d=new Date(today); d.setDate(today.getDate()-i); const wd=d.getDay(); let c=Math.random()<(wd===0||wd===6?0.25:0.7)?Math.floor(Math.pow(Math.random(),1.7)*13):0; out.push({date:d.toISOString().slice(0,10),count:c,level:lvl(c)}); } return out; }
+    async function loadDays(){ try{ const r=await fetch('https://github-contributions-api.jogruber.de/v4/'+USER+'?y=last',{cache:'no-store'}); if(!r.ok)throw 0; const j=await r.json(); if(!j.contributions||!j.contributions.length)throw 0; return j.contributions.map(function(c){return{date:c.date,count:c.count,level:c.level};}); }catch(e){return fallback();} }
+
+    function buildCols(days){ days=days.slice().sort(function(a,b){return a.date<b.date?-1:1;}); const cols=[]; let col=new Array(ROWS).fill(null); days.forEach(function(d,i){ const wd=new Date(d.date+'T00:00:00').getDay(); if(i===0){for(let r=0;r<wd;r++)col[r]={pad:true};} col[wd]=d; if(wd===6){cols.push(col);col=new Array(ROWS).fill(null);} }); if(col.some(function(x){return x!==null;}))cols.push(col); return cols.slice(-WEEKS); }
+
+    let COLS=[], colEls=[], gridW=0, gridH=0;
+    function render(days){ COLS=buildCols(days); gridEl.innerHTML=''; colEls=[]; COLS.forEach(function(col){ const cd=document.createElement('div'); cd.className='cg-col'; const cells=[]; for(let r=0;r<ROWS;r++){ const c=document.createElement('div'); const data=col[r]; if(!data||data.pad){c.className='cg-cell pad';}else{c.className='cg-cell l'+(data.level!=null?data.level:lvl(data.count)); c.dataset.count=data.count; c.dataset.date=data.date; c.addEventListener('mouseenter',showTip); c.addEventListener('mousemove',moveTip); c.addEventListener('mouseleave',hideTip);} cd.appendChild(c); cells.push(c); } gridEl.appendChild(cd); colEls.push(cells); }); gridW=COLS.length*PITCH-GAP; gridH=ROWS*PITCH-GAP; sizeCanvas(); buildPath(); lastIdx=-1; }
+
+    function fmtDate(iso){return new Date(iso+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+    function showTip(e){const n=+e.currentTarget.dataset.count;tip.innerHTML='<b style="color:#4ea54a">'+n+'</b> contribution'+(n===1?'':'s')+' · '+fmtDate(e.currentTarget.dataset.date);tip.style.opacity='1';moveTip(e);}
+    function moveTip(e){tip.style.left=e.clientX+'px';tip.style.top=(e.clientY-10)+'px';}
+    function hideTip(){tip.style.opacity='0';}
+
+    let DPR=Math.min(window.devicePixelRatio||1,2);
+    function sizeCanvas(){const w=gridW+PAD*2,h=gridH+PAD*2;fx.style.left=-PAD+'px';fx.style.top=-PAD+'px';fx.style.width=w+'px';fx.style.height=h+'px';fx.width=w*DPR;fx.height=h*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+
+    let path=[];
+    function buildPath(){path=[];for(let r=0;r<ROWS;r++){if(r%2===0){for(let ci=0;ci<COLS.length;ci++)path.push({ci,r});}else{for(let ci=COLS.length-1;ci>=0;ci--)path.push({ci,r});}}}
+    function center(p){return{x:PAD+p.ci*PITCH+CELL/2,y:PAD+p.r*PITCH+CELL/2};}
+    function posAt(tt){if(!path.length)return{x:0,y:0,dx:1,dy:0};const i0=Math.max(0,Math.min(Math.floor(tt),path.length-1));const i1=Math.min(i0+1,path.length-1);const f=Math.max(0,Math.min(tt-i0,1));const a=center(path[i0]),b=center(path[i1]);let dx=b.x-a.x,dy=b.y-a.y;if(i0===i1){dx=1;dy=0;}return{x:a.x+(b.x-a.x)*f,y:a.y+(b.y-a.y)*f,dx,dy};}
+    function eat(p){const el=colEls[p.ci]&&colEls[p.ci][p.r];if(el&&!el.classList.contains('pad'))el.classList.add('eaten');}
+    function regrowCol(ci){if(colEls[ci])colEls[ci].forEach(function(c){c.classList.remove('eaten');});}
+
+    function drawPac(x,y,angle,chomp){const R=PITCH*0.82;ctx.save();ctx.translate(x,y);ctx.rotate(angle);const mouth=(0.06+0.30*Math.abs(Math.sin(chomp)))*Math.PI;ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R,mouth,Math.PI*2-mouth);ctx.closePath();ctx.fill();ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(R*0.12,-R*0.46,R*0.13,0,Math.PI*2);ctx.fill();ctx.restore();}
+    const GC=['#ef4d3a','#46c7e0','#f6a5cb','#f0913a'];
+    function drawGhost(x,y,color,dx,dy){const R=PITCH*0.78,cy=-R*0.05;ctx.save();ctx.translate(x,y);ctx.fillStyle=color;ctx.beginPath();ctx.arc(0,cy,R,Math.PI,Math.PI*2);ctx.lineTo(R,cy+R*0.82);const w=2*R/4;for(let i=0;i<4;i++){const xr=R-i*w;ctx.lineTo(xr-w*0.5,cy+R*0.58);ctx.lineTo(xr-w,cy+R*0.82);}ctx.closePath();ctx.fill();const dl=Math.hypot(dx,dy)||1,lx=dx/dl,ly=dy/dl,ex=R*0.36,ey=cy,er=R*0.30;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-ex,ey,er,0,Math.PI*2);ctx.arc(ex,ey,er,0,Math.PI*2);ctx.fill();ctx.fillStyle='#1a2b4a';ctx.beginPath();ctx.arc(-ex+lx*er*0.5,ey+ly*er*0.5,er*0.5,0,Math.PI*2);ctx.arc(ex+lx*er*0.5,ey+ly*er*0.5,er*0.5,0,Math.PI*2);ctx.fill();ctx.restore();}
+
+    let t=0,state='eat',stateT=0,lastIdx=-1,rg=0,chomp=0,prev=0,animId;
+    function frame(now){if(!prev)prev=now;let dt=(now-prev)/1000;prev=now;if(dt>0.05)dt=0.05;chomp+=dt*15;if(state==='eat'){t+=24*dt;const idx=Math.min(Math.floor(t),path.length-1);while(lastIdx<idx){lastIdx++;eat(path[lastIdx]);}if(t>=path.length-1){state='regrow';stateT=0;rg=0;}}else if(state==='regrow'){stateT+=dt;const tgt=Math.floor(stateT/0.012);while(rg<=tgt&&rg<COLS.length){regrowCol(rg);rg++;}if(rg>=COLS.length&&stateT>COLS.length*0.012+0.55){state='eat';t=0;lastIdx=-1;}}ctx.clearRect(0,0,gridW+PAD*2,gridH+PAD*2);if(state==='eat'&&path.length){for(let i=2;i>=1;i--){const gtt=t-i*3;if(gtt<0)continue;const g=posAt(gtt);drawGhost(g.x,g.y,GC[(i-1)%4],g.dx,g.dy);}const p=posAt(t);drawPac(p.x,p.y,Math.atan2(p.dy,p.dx),chomp);}animId=requestAnimationFrame(frame);}
+
+    (async function(){const days=await loadDays();render(days);animId=requestAnimationFrame(frame);})();
+    return function(){if(animId)cancelAnimationFrame(animId);const t=document.querySelector('.cg-tip');if(t)t.remove();};
+  }, []);
+
+  return (
+    <div style={{marginBottom:22}}>
+      <div style={{background:'#fff',border:'2px solid #1a1a1a',borderRadius:8,padding:'12px 14px 14px',boxShadow:'3px 3px 0 #1a1a1a'}}>
+        <div style={{fontSize:10,fontWeight:700,color:'#888',marginBottom:10,letterSpacing:'0.6px',textTransform:'uppercase'}}>GitHub Activity · Last 6 months</div>
+        <div ref={stageRef} style={{position:'relative',height:82}}>
+          <div className="cg-grid" style={{display:'flex',gap:'2px'}}></div>
+          <canvas style={{position:'absolute',pointerEvents:'none',zIndex:3}}></canvas>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Pac-Man cell styles */
+const _cgStyle = document.createElement('style');
+_cgStyle.textContent = '.cg-col{display:flex;flex-direction:column;gap:2px}.cg-cell{width:10px;height:10px;border-radius:2px;background:#e9e3d4;transition:opacity .32s ease,transform .32s cubic-bezier(.2,1.5,.4,1)}.cg-cell.pad{visibility:hidden}.cg-cell.l1{background:#cfe9b8}.cg-cell.l2{background:#93cf6b}.cg-cell.l3{background:#4ea54a}.cg-cell.l4{background:#2b7a32}.cg-cell.eaten{opacity:0;transform:scale(.1)}';
+document.head.appendChild(_cgStyle);
+
 function Home({set}) {
   return (
     <div className="pad">
@@ -548,6 +618,8 @@ function About() {
           <p style={{fontSize:14,lineHeight:1.75,color:'#444',marginBottom:26,maxWidth:560}}>
             Hey! I'm Manik — a second-year Data Science student at IIIT Sonepat. I interned at LabelNest India, got into open source, and ended up with merged PRs in a production threat intelligence platform. I do hackathons when I can and have won some. I build freelance products for clients on the side. Grinding DSA and still going. Still building, still learning, still shipping 🚀
           </p>
+
+          <ContribPacman />
 
           <div style={{fontSize:14,fontWeight:800,marginBottom:12}}>Education</div>
           {[
