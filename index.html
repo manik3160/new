@@ -413,7 +413,7 @@ function StatRow() {
       .then(r => r.json()).then(d => setContribs(d.total?.lastYear)).catch(() => setContribs(null));
   }, []);
   const stats = [
-    {n:'3',                                       l:'Startups'},
+    {n:'2',                                       l:'Startups'},
     {n:'1',                                       l:'Hackathon Won'},
     {n: prs != null ? prs + '+' : '…',           l:'PRs Merged'},
     {n: contribs != null ? contribs + '' : '…',  l:'Contributions'},
