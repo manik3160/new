@@ -140,7 +140,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
 
 /* Pac-Man contribution graph */
 .cg-col{display:flex;flex-direction:column;gap:2px}
-.cg-cell{width:7px;height:7px;border-radius:2px;background:#e9e3d4;transition:opacity .32s ease,transform .32s cubic-bezier(.2,1.5,.4,1)}
+.cg-cell{width:10px;height:10px;border-radius:2px;background:#e9e3d4;transition:opacity .32s ease,transform .32s cubic-bezier(.2,1.5,.4,1)}
 .cg-cell.pad{visibility:hidden}
 .cg-cell.l1{background:#cfe9b8}
 .cg-cell.l2{background:#93cf6b}
@@ -512,7 +512,7 @@ function ContribPacman() {
     const fx = stage.querySelector('canvas');
     if (!gridEl || !fx) return;
     const ctx = fx.getContext('2d');
-    const USER='manik3160', CELL=7, GAP=2, PITCH=9, ROWS=7, PAD=8, WEEKS=26;
+    const USER='manik3160', CELL=10, GAP=2, PITCH=12, ROWS=7, PAD=6, WEEKS=26;
 
     // Tooltip
     let tip = document.querySelector('.cg-tip');
@@ -560,7 +560,7 @@ function ContribPacman() {
     <div className="home-memoji" style={{flexShrink:0,alignSelf:'flex-start'}}>
       <div style={{background:'#fff',border:'2px solid #1a1a1a',borderRadius:8,padding:'12px 12px 10px',boxShadow:'3px 3px 0 #1a1a1a'}}>
         <div style={{fontSize:10,fontWeight:700,color:'#888',marginBottom:8,letterSpacing:'0.6px',textTransform:'uppercase'}}>GitHub Activity</div>
-        <div ref={stageRef} style={{position:'relative'}}>
+        <div ref={stageRef} style={{position:'relative',height:82,overflow:'visible'}}>
           <div className="cg-grid" style={{display:'flex',gap:'2px'}}></div>
           <canvas style={{position:'absolute',pointerEvents:'none',zIndex:3}}></canvas>
         </div>
